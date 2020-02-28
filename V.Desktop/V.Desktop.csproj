@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <ApplicationIcon />
+    <StartupObject />
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MonogameFacade.Core\MonogameFacade.Core.csproj" />
+    <ProjectReference Include="..\MonogameFacade.Desktop\MonogameFacade.Desktop.csproj" />
+    <ProjectReference Include="..\V\V.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Content\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <MonoGameContentReference Include="..\Content\DesktopContent.mgcb" Link="Content\DesktopContent.mgcb" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MonoGame.Content.Builder" Version="3.7.0.9" />
+    <PackageReference Include="MonoGame.Framework.DesktopGL.Core" Version="3.8.0.2" />
+  </ItemGroup>
+
+</Project>
