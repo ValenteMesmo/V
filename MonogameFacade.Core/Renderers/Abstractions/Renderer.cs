@@ -4,6 +4,6 @@ namespace MonogameFacade
 {
     public abstract class Renderer
     {
-        public abstract void Draw(SpriteBatch batch);
+        public abstract void Draw(SpriteBatch batch, GameObject Parent);
     }
 }

@@ -8,11 +8,26 @@ namespace MonogameFacade
         public Texture2D Texture;
         public Color Color = Color.White;
         public Rectangle? Source;
-        public Rectangle Target;
+        private Rectangle Target;
 
-        public override void Draw(SpriteBatch batch)
+        public Point Offset;
+        public Point Size;
+
+        public override void Draw(SpriteBatch batch, GameObject Parent)
         {
-            batch.Draw(Texture, Target, Source, Color, 0, Vector2.Zero, SpriteEffects.None, 0);
+            Target.Location = Offset + Parent.Location;
+            Target.Size = Size;
+
+            batch.Draw(
+                Texture
+                , Target
+                , Source
+                , Color
+                , 0
+                , Vector2.Zero
+                , SpriteEffects.None
+                , 0
+            );
         }
     }
 }

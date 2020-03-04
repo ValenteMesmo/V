@@ -8,15 +8,14 @@ namespace MonogameFacade
         public SpriteFont Font;
         public string Text;
         public float scale = 10;
-        public Rectangle Target;
         public Color Color = Color.Red;
 
-        public override void Draw(SpriteBatch batch)
+        public override void Draw(SpriteBatch batch, GameObject Parent)
         {
             batch.DrawString(
                 Font
                 , Text
-                , new Vector2(100, 100)
+                , Parent.Location.ToVector2()
                 , Color
                 , 0
                 , Vector2.Zero

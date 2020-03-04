@@ -1,60 +1,23 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
+using MonogameFacade.Core;
 
 namespace MonogameFacade
 {
-
-    public abstract class BaseGame : IDisposable
-    {
-        protected readonly GameFacade GameFacade;
-        //TODO: move to here all these facade properties
-        public SpriteFont Font { get => GameFacade.font; }
-        public FrameCounter FrameCounter { get => GameFacade.FrameCounter; }
-        public Bag<Renderer> Renderers { get => GameFacade.Renderers; }
-        public Bag<GameObject> Objects { get => GameFacade.Objects; }
-        public Dictionary<string, Texture2D> Textures { get => GameFacade.Texutes; }
-
-
-        public BaseGame()
-        {
-            GameFacade = new GameFacade(this);
-        }
-
-        public abstract void Update(GameTime gameTime);
-        public abstract void Initialize();
-        public abstract void Draw(GameTime gameTime);
-        public abstract void Ready(BaseGame game);
-
-        public abstract Dictionary<string, Texture2D> LoadTextures(ContentManager content);
-
-        public void Run()
-        {
-            GameFacade.Run();
-        }
-
-        public void Dispose()
-        {
-            GameFacade.Dispose();
-        }
-    }
-
     public class GameFacade : Game
     {
-        public FrameCounter FrameCounter = new FrameCounter();
-        public Bag<GameObject> Objects = new Bag<GameObject>();
-        public Bag<Renderer> Renderers = new Bag<Renderer>();
-        public Bag<Vector2> Touches = new Bag<Vector2>();
         private readonly BaseGame BaseGame;
         public readonly Camera Camera;
+        public Bag<Vector2> Touches = new Bag<Vector2>();
+        private readonly QuadTree quadtree = new QuadTree(
+            new Rectangle(-11000, -7000, 23000, 15000)
+            , 50
+            , 5
+        );
 
         public GraphicsDeviceManager graphics;
-        public Dictionary<string, Texture2D> Texutes { get; private set; }
 
         private SpriteBatch spriteBatch;
-        public SpriteFont font;
 
         public GameFacade(BaseGame BaseGame)
         {
@@ -71,21 +34,70 @@ namespace MonogameFacade
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            font = Content.Load<SpriteFont>("font");
-            Texutes = BaseGame.LoadTextures(Content);
+            BaseGame.Font = Content.Load<SpriteFont>("font");
+            BaseGame.Textures = BaseGame.LoadTextures(Content);
 
             BaseGame.Initialize();
             BaseGame.Ready(BaseGame);
         }
 
+        private GameObject currentObject;
+        private Collider currentCollider;
+
         public void ActualUpdate(GameTime gameTime)
         {
-            Renderers.Clear();
+            quadtree.Clear();
+            for (int i = 0; i < BaseGame.Objects.Count; i++)
+                quadtree.AddRange(BaseGame.Objects[i].Colliders);
 
-            for (int i = 0; i < Objects.Count; i++)
-                Objects[i].Update(BaseGame);
+            for (int i = 0; i < BaseGame.Objects.Count; i++)
+            {
+                currentObject = BaseGame.Objects[i];
+                currentObject.Update(BaseGame);
+
+                currentObject.Location.Y =
+                    currentObject.Location.Y
+                    + currentObject.Velocity.Y;
+
+                if (!currentObject.IsPassive)
+                    for (int j = 0; j < currentObject.Colliders.Count; j++)
+                    {
+                        currentCollider = currentObject.Colliders[j];
+
+                        //currentCollider.BeforeCollisions();
+                        CheckCollisions(CollisionDirection.Vertical, currentCollider);
+                    }
+
+                currentObject.Location.X =
+                    currentObject.Location.X
+                    + currentObject.Velocity.X;
+                if (!currentObject.IsPassive)
+                    for (int j = 0; j < currentObject.Colliders.Count; j++)
+                    {
+                        currentCollider = currentObject.Colliders[j];
+
+                        //currentCollider.BeforeCollisions();
+                        CheckCollisions(CollisionDirection.Horizontal, currentCollider);
+                    }
+            }
 
             Camera.Update(GraphicsDevice);
+        }
+
+        private void CheckCollisions(CollisionDirection direction, Collider source)
+        {
+            var targets = quadtree.Get(source);
+
+            for (int i = 0; i < targets.Length; i++)
+            {
+                if (source.Parent == targets[i].Parent)
+                    continue;
+
+                if (direction == CollisionDirection.Vertical)
+                    source.IsCollidingV(targets[i]);
+                else
+                    source.IsCollidingH(targets[i]);
+            }
         }
 
         protected override void Update(GameTime gameTime)
@@ -107,8 +119,9 @@ namespace MonogameFacade
                 null,
                 Camera.transform);
 
-            for (var i = 0; i < Renderers.Count; i++)
-                Renderers[i].Draw(spriteBatch);
+            for (int i = 0; i < BaseGame.Objects.Count; i++)
+                for (var j = 0; j < BaseGame.Objects[i].Renderers.Count; j++)
+                    BaseGame.Objects[i].Renderers[j].Draw(spriteBatch, BaseGame.Objects[i]);
 
             spriteBatch.End();
 

@@ -47,7 +47,7 @@ namespace MonogameFacade
 
         public int Capacity => _items.Length;
         public bool IsEmpty => Count == 0;
-        public int Count { get; private set; }
+        public int Count;
 
         public Bag(int capacity = 16)
         {

@@ -8,7 +8,7 @@ namespace MonogameFacade
         //public long TotalFrames { get; private set; }
         //public double TotalSeconds { get; private set; }
         //public double AverageFramesPerSecond { get; private set; }
-        public double CurrentFramesPerSecond { get; private set; }
+        public double CurrentFramesPerSecond ;
 
         public const int MAXIMUM_SAMPLES = 10;
 

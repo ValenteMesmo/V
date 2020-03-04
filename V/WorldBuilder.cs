@@ -1,13 +1,14 @@
-﻿using MonogameFacade;
+﻿using Microsoft.Xna.Framework;
+using MonogameFacade;
 using System;
 using System.Collections.Generic;
 
 namespace V
 {
+   
+
     public class WorldBuilder : GameObject
     {
-        private readonly Bag<SpriteRenderer> renderers = new Bag<SpriteRenderer>();
-
         public WorldBuilder(BaseGame game)
         {
             for (int i = 0; i < 15; i++)
@@ -18,21 +19,14 @@ namespace V
 
         private void AddBlock(BaseGame game, int i, int j)
         {
-            var a = new SpriteRenderer();
-            a.Texture = game.Textures["btn"];
-            a.Target.X = i * 100;
-            a.Target.Y = j * 100;
-            a.Target.Width = 100;
-            a.Target.Height = 100;
-            renderers.Add(a);
+            var block = new Block(game);
+            block.Location.X = i * 100;
+            block.Location.Y = j * 100;
+            game.Objects.Add(block);
         }
 
         public override void Update(BaseGame game)
         {
-            for (int i = 0; i < renderers.Count; i++)
-            {
-                game.Renderers.Add(renderers[i]);
-            }
         }
     }
 }

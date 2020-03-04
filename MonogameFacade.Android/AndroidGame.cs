@@ -44,7 +44,7 @@ namespace MonogameFacade
 
         public override void Draw(GameTime gameTime)
         {
-            GameFacade.FrameCounter.Update(
+            FrameCounter.Update(
                 gameTime.ElapsedGameTime.TotalSeconds);
         }
 

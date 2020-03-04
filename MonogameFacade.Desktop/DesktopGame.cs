@@ -17,7 +17,6 @@ namespace MonogameFacade
 
         public DesktopGame() : base() { }
 
-
         public override void Draw(GameTime gameTime)
         {
         }
@@ -47,23 +46,25 @@ namespace MonogameFacade
 
             return result;
         }
-
+        //DateTime currentUpdate;
+        //double delta;
         public override void Update(GameTime gameTime)
         {
-            var currentUpdate = DateTime.Now;
-            var delta = (currentUpdate - previousUpdate).TotalSeconds;
-            if (delta > 0.25)
-                delta = 0.25;
-            previousUpdate = currentUpdate;
+            //currentUpdate = DateTime.Now;
+            //delta = (currentUpdate - previousUpdate).TotalSeconds;
+            //if (delta > 0.25)
+            //    delta = 0.25;
+            //previousUpdate = currentUpdate;
 
-            accumulator = accumulator + delta;
+            //accumulator = accumulator + delta;
+            accumulator = accumulator + gameTime.ElapsedGameTime.TotalSeconds;
 
             GameFacade.Touches.Clear();
-            var mouse = Mouse.GetState();
-            if (mouse.LeftButton == ButtonState.Pressed)
-                GameFacade.Touches.Add(
-                    GameFacade.Camera.GetWorldPosition(
-                        mouse.Position.ToVector2()));
+            //var mouse = Mouse.GetState();
+            //if (mouse.LeftButton == ButtonState.Pressed)
+            //    GameFacade.Touches.Add(
+            //        GameFacade.Camera.GetWorldPosition(
+            //            mouse.Position.ToVector2()));
 
             if (accumulator >= dt)
             {
@@ -73,7 +74,7 @@ namespace MonogameFacade
             else
                 GameFacade.SuppressDraw();
 
-            GameFacade.FrameCounter.Update(accumulator);
+            FrameCounter.Update(accumulator);
         }
     }
 }
