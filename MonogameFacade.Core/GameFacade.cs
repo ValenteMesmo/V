@@ -1,23 +1,18 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using MonogameFacade.Core;
+using System.Collections.Generic;
 
 namespace MonogameFacade
 {
     public class GameFacade : Game
     {
-        private readonly BaseGame BaseGame;
-        public readonly Camera Camera;
-        public Bag<Vector2> Touches = new Bag<Vector2>();
-        private readonly QuadTree quadtree = new QuadTree(
-            new Rectangle(-11000, -7000, 23000, 15000)
-            , 50
-            , 5
-        );
-
-        public GraphicsDeviceManager graphics;
-
-        private SpriteBatch spriteBatch;
+        private readonly BaseGame BaseGame = null;
+        public readonly Camera Camera = null;
+        public List<Vector2> Touches = null;
+        private GameObject currentObject = null;
+        private Collider currentCollider = null;
+        public GraphicsDeviceManager graphics = null;
+        private SpriteBatch spriteBatch = null;
 
         public GameFacade(BaseGame BaseGame)
         {
@@ -25,6 +20,7 @@ namespace MonogameFacade
             this.Camera = new Camera();
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+            Touches = new List<Vector2>();
 
             graphics.PreferredBackBufferWidth = 800;
             graphics.PreferredBackBufferHeight = 480;
@@ -41,15 +37,9 @@ namespace MonogameFacade
             BaseGame.Ready(BaseGame);
         }
 
-        private GameObject currentObject;
-        private Collider currentCollider;
 
         public void ActualUpdate(GameTime gameTime)
         {
-            quadtree.Clear();
-            for (int i = 0; i < BaseGame.Objects.Count; i++)
-                quadtree.AddRange(BaseGame.Objects[i].Colliders);
-
             for (int i = 0; i < BaseGame.Objects.Count; i++)
             {
                 currentObject = BaseGame.Objects[i];
@@ -64,8 +54,10 @@ namespace MonogameFacade
                     {
                         currentCollider = currentObject.Colliders[j];
 
-                        //currentCollider.BeforeCollisions();
-                        CheckCollisions(CollisionDirection.Vertical, currentCollider);
+                        currentCollider.Handler.BeforeCollisions();
+                        for (int k = 0; k < BaseGame.Objects.Count; k++)
+                            for (int l = 0; l < BaseGame.Objects[k].Colliders.Count; l++)
+                                CheckCollisions(CollisionDirection.Vertical, currentCollider, BaseGame.Objects[k].Colliders[l]);
                     }
 
                 currentObject.Location.X =
@@ -76,27 +68,29 @@ namespace MonogameFacade
                     {
                         currentCollider = currentObject.Colliders[j];
 
-                        //currentCollider.BeforeCollisions();
-                        CheckCollisions(CollisionDirection.Horizontal, currentCollider);
+                        currentCollider.Handler.BeforeCollisions();
+                        for (int k = 0; k < BaseGame.Objects.Count; k++)
+                            for (int l = 0; l < BaseGame.Objects[k].Colliders.Count; l++)
+                                CheckCollisions(CollisionDirection.Horizontal, currentCollider, BaseGame.Objects[k].Colliders[l]);
                     }
             }
 
             Camera.Update(GraphicsDevice);
         }
 
-        private void CheckCollisions(CollisionDirection direction, Collider source)
+        private void CheckCollisions(CollisionDirection direction, Collider source, Collider target)
         {
-            var targets = quadtree.Get(source);
+            //var targets = quadtree.Get(source);
 
-            for (int i = 0; i < targets.Length; i++)
+            //for (int i = 0; i < targets.Length; i++)
             {
-                if (source.Parent == targets[i].Parent)
-                    continue;
+                if (source.Parent == target.Parent)
+                    return;
 
                 if (direction == CollisionDirection.Vertical)
-                    source.IsCollidingV(targets[i]);
+                    source.IsCollidingV(target);
                 else
-                    source.IsCollidingH(targets[i]);
+                    source.IsCollidingH(target);
             }
         }
 
@@ -116,8 +110,9 @@ namespace MonogameFacade
                 null,
                 null,
                 null,
-                null,
-                Camera.transform);
+                null
+                , Camera.transform
+                );
 
             for (int i = 0; i < BaseGame.Objects.Count; i++)
                 for (var j = 0; j < BaseGame.Objects[i].Renderers.Count; j++)

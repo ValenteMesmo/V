@@ -7,12 +7,20 @@ namespace MonogameFacade
     {
         private const float defaultZoom = 0.4f;
 
-        private float zoom = defaultZoom;
-        private float rotation = 0.0f;
+        private float zoom;
+        private float rotation;
 
-        public Vector2 position = new Vector2(980.0f, 550.0f);
+        public Vector2 position;
 
-        public Matrix transform  = new Matrix();
+        public Matrix transform;
+
+        public Camera()
+        {
+            zoom = defaultZoom;
+            rotation = 0.0f;
+            position = new Vector2(980.0f, 550.0f);
+            transform = new Matrix();
+        }
 
         public Vector2 GetWorldPosition(Vector2 position2)
         {

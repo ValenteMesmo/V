@@ -7,8 +7,14 @@ namespace MonogameFacade
     {
         public SpriteFont Font;
         public string Text;
-        public float scale = 10;
-        public Color Color = Color.Red;
+        public float scale;
+        public Color Color;
+
+        public TextRenderer()
+        {
+            Color = Color.Red;
+            scale = 10;
+        }
 
         public override void Draw(SpriteBatch batch, GameObject Parent)
         {

@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using MonogameFacade.Core;
 using System;
 using System.Collections.Generic;
 
@@ -12,13 +11,15 @@ namespace MonogameFacade
         protected readonly GameFacade GameFacade;
 
         public SpriteFont Font;
-        public FrameCounter FrameCounter = new FrameCounter();
-        public Bag<GameObject> Objects = new Bag<GameObject>();
+        public FrameCounter FrameCounter = null;
+        public List<GameObject> Objects = null;
 
-        public Dictionary<string, Texture2D> Textures;
+        public Dictionary<string, Texture2D> Textures = null;
 
         public BaseGame()
         {
+            Objects = new List<GameObject>();
+            FrameCounter = new FrameCounter();
             GameFacade = new GameFacade(this);
         }
 

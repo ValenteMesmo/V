@@ -6,12 +6,17 @@ namespace MonogameFacade
     public class SpriteRenderer : Renderer
     {
         public Texture2D Texture;
-        public Color Color = Color.White;
+        public Color Color;
         public Rectangle? Source;
         private Rectangle Target;
 
         public Point Offset;
         public Point Size;
+
+        public SpriteRenderer()
+        {
+            Color = Color.White;
+        }
 
         public override void Draw(SpriteBatch batch, GameObject Parent)
         {

@@ -5,8 +5,8 @@ namespace V
 {
     public class Player : GameObject
     {
-        private SpriteRenderer sprite;
-        private Collider collider;
+        private SpriteRenderer sprite = null;
+        private Collider collider = null;
 
         public Player(BaseGame game)
         {

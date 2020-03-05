@@ -11,9 +11,9 @@ namespace MonogameFacade
     public abstract class DesktopGame : BaseGame
     {
         const double dt = 0.0166;
-        double accumulator = 0.0;
+        double accumulator;
 
-        DateTime previousUpdate = DateTime.Now;
+        //DateTime previousUpdate = DateTime.Now;
 
         public DesktopGame() : base() { }
 
@@ -60,11 +60,11 @@ namespace MonogameFacade
             accumulator = accumulator + gameTime.ElapsedGameTime.TotalSeconds;
 
             GameFacade.Touches.Clear();
-            //var mouse = Mouse.GetState();
-            //if (mouse.LeftButton == ButtonState.Pressed)
-            //    GameFacade.Touches.Add(
-            //        GameFacade.Camera.GetWorldPosition(
-            //            mouse.Position.ToVector2()));
+            var mouse = Mouse.GetState();
+            if (mouse.LeftButton == ButtonState.Pressed)
+                GameFacade.Touches.Add(
+                    GameFacade.Camera.GetWorldPosition(
+                        mouse.Position.ToVector2()));
 
             if (accumulator >= dt)
             {
