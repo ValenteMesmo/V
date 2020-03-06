@@ -23,12 +23,19 @@ namespace MonogameFacade
 
         public override void Initialize()
         {
+            //GameFacade.graphics.IsFullScreen = true;
             GameFacade.IsMouseVisible = true;
             GameFacade.IsFixedTimeStep = false;
             GameFacade.graphics.SynchronizeWithVerticalRetrace = false;
             GameFacade.InactiveSleepTime = new TimeSpan(0);
             GameFacade.graphics.PreferredBackBufferFormat = SurfaceFormat.HdrBlendable;
             //GameFacade.graphics.GraphicsProfile = GraphicsProfile.HiDef;
+            GameFacade.graphics.PreferredBackBufferWidth =
+                1176;
+            //Camera.windowWidth;
+            GameFacade.graphics.PreferredBackBufferHeight =
+                664;
+                //Camera.windowHeight;
             GameFacade.graphics.ApplyChanges();
         }
 
@@ -63,7 +70,7 @@ namespace MonogameFacade
             var mouse = Mouse.GetState();
             if (mouse.LeftButton == ButtonState.Pressed)
                 GameFacade.Touches.Add(
-                    GameFacade.Camera.GetWorldPosition(
+                    Camera.GetWorldPosition(
                         mouse.Position.ToVector2()));
 
             if (accumulator >= dt)

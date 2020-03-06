@@ -8,9 +8,11 @@ namespace MonogameFacade
 {
     public abstract class BaseGame : IDisposable
     {
-        protected readonly GameFacade GameFacade;
+        protected readonly GameFacade GameFacade = null;
+        public readonly Camera Camera = null;
+        public readonly Camera GuiCamera = null;
 
-        public SpriteFont Font;
+        public SpriteFont Font = null;
         public FrameCounter FrameCounter = null;
         public List<GameObject> Objects = null;
 
@@ -18,6 +20,11 @@ namespace MonogameFacade
 
         public BaseGame()
         {
+            this.Camera = new Camera();
+            this.GuiCamera = new Camera() { Location = Point.Zero };
+            Camera.Zoom = 0.05f;
+            GuiCamera.Zoom = 1f;
+
             Objects = new List<GameObject>();
             FrameCounter = new FrameCounter();
             GameFacade = new GameFacade(this);

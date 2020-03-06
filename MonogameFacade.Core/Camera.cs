@@ -6,19 +6,30 @@ namespace MonogameFacade
     public class Camera
     {
         private const float defaultZoom = 0.4f;
+        //1280 x 720
+        public const int windowWidth =
+            //1366
+            1176
+            //640
+            ;
+        public const int windowHeight =
+            //768
+            664
+            //480
+            ;
 
-        private float zoom;
+        public float Zoom;
         private float rotation;
 
-        public Vector2 position;
+        public Point Location;
 
         public Matrix transform;
 
         public Camera()
         {
-            zoom = defaultZoom;
+            Zoom = defaultZoom;
             rotation = 0.0f;
-            position = new Vector2(980.0f, 550.0f);
+            //Location = new Point(980, 550);
             transform = new Matrix();
         }
 
@@ -33,18 +44,30 @@ namespace MonogameFacade
         }
 
         public void Update(GraphicsDevice graphicsDevice)
-        {
+        {           
             transform =
-                Matrix.CreateTranslation(-position.X, -position.Y, 0.0f)
+                Matrix.CreateTranslation(-Location.X, -Location.Y, 0.0f)
                     * Matrix.CreateRotationZ(rotation)
                     * Matrix.CreateScale(
-                        zoom * (graphicsDevice.Viewport.Width / 800)//1176.0f;
-                        , zoom * (graphicsDevice.Viewport.Height / 480)//664.0f;
+                        Zoom * (graphicsDevice.Viewport.Width / windowWidth)
+                        , Zoom * (graphicsDevice.Viewport.Height / windowHeight)
                         , 1.0f)
                     * Matrix.CreateTranslation(
                         graphicsDevice.Viewport.Width * 0.5f
                         , graphicsDevice.Viewport.Height * 0.5f
                         , 0.0f);
+
+
+            //var widthDiff = graphicsDevice.Viewport.Width / windowWidth;
+            //var HeightDiff = graphicsDevice.Viewport.Height / windowHeight;
+
+            //transform =
+            //  Matrix.CreateTranslation(new Vector3(-Location.X, -Location.Y, 0.0f))
+            //    * Matrix.CreateRotationZ(rotation)
+            //    * Matrix.CreateScale(new Vector3(Zoom * widthDiff, Zoom * HeightDiff, 1))
+            //    * Matrix.CreateTranslation(new Vector3(
+            //        graphicsDevice.Viewport.Width * 0.5f,
+            //        graphicsDevice.Viewport.Height * 0.5f, 0));
         }
     }
 }

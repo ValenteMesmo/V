@@ -18,12 +18,45 @@ namespace MonogameFacade
             Color = Color.White;
         }
 
-        public override void Draw(SpriteBatch batch, GameObject Parent)
+        public override void Draw(SpriteBatch batchUi, SpriteBatch batch, GameObject Parent)
         {
             Target.Location = Offset + Parent.Location;
             Target.Size = Size;
 
             batch.Draw(
+                Texture
+                , Target
+                , Source
+                , Color
+                , 0
+                , Vector2.Zero
+                , SpriteEffects.None
+                , 0
+            );
+        }
+    }
+
+    public class GuiSpriteRenderer : Renderer
+    {
+        public Texture2D Texture;
+        public Color Color;
+        public Rectangle? Source;
+        private Rectangle Target;
+
+        public Point Offset;
+        public Point Size;
+
+        public GuiSpriteRenderer()
+        {
+            Color = Color.White;
+        }
+
+        public override void Draw(SpriteBatch batchGui, SpriteBatch batch, GameObject Parent)
+        {
+            Target.Location = Offset + Parent.Location;
+            Target.Size = Size;
+
+            batchGui.Draw(
                 Texture
                 , Target
                 , Source

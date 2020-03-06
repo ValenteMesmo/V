@@ -12,10 +12,12 @@ namespace V.Android
         , Theme = "@style/Theme.Splash"
         , AlwaysRetainTaskState = true
         , LaunchMode = LaunchMode.SingleInstance
-        , ScreenOrientation = ScreenOrientation.Landscape)]
+        , ScreenOrientation = ScreenOrientation.Landscape
+        , ResizeableActivity = true
+        , ConfigurationChanges = ConfigChanges.Orientation | ConfigChanges.Keyboard | ConfigChanges.KeyboardHidden | ConfigChanges.ScreenSize)]
     public class Activity1 : Microsoft.Xna.Framework.AndroidGameActivity
     {
-        private AndroidGame game;
+        private AndroidGame game = null;
 
         protected override void OnCreate(Bundle bundle)
         {
@@ -23,6 +25,18 @@ namespace V.Android
             game = new Game1(Assets);
             SetViewFullScreen();
             game.Run();
+        }
+
+        protected override void OnResume()
+        {
+            base.OnResume();
+            SetViewFullScreen();
+        }
+
+        protected override void OnRestart()
+        {
+            base.OnRestart();
+            SetViewFullScreen();
         }
 
         private void SetViewFullScreen()
@@ -36,12 +50,13 @@ namespace V.Android
                 | SystemUiFlags.Fullscreen
                 | SystemUiFlags.ImmersiveSticky);
 
-            Window.AddFlags(WindowManagerFlags.Fullscreen);
+            //Window.AddFlags(WindowManagerFlags.Fullscreen);
 
             //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
-            {
-                Window.Attributes.LayoutInDisplayCutoutMode = LayoutInDisplayCutoutMode.ShortEdges;
-            }
+            //{
+            Window.Attributes.LayoutInDisplayCutoutMode =
+                LayoutInDisplayCutoutMode.ShortEdges;
+            //}
 
             SetContentView(view);
         }

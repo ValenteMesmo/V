@@ -16,9 +16,9 @@ namespace MonogameFacade
             scale = 10;
         }
 
-        public override void Draw(SpriteBatch batch, GameObject Parent)
+        public override void Draw(SpriteBatch batchGui, SpriteBatch batch, GameObject Parent)
         {
-            batch.DrawString(
+            batchGui.DrawString(
                 Font
                 , Text
                 , Parent.Location.ToVector2()

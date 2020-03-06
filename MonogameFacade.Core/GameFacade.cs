@@ -7,34 +7,43 @@ namespace MonogameFacade
     public class GameFacade : Game
     {
         private readonly BaseGame BaseGame = null;
-        public readonly Camera Camera = null;
         public List<Vector2> Touches = null;
         private GameObject currentObject = null;
         private Collider currentCollider = null;
         public GraphicsDeviceManager graphics = null;
         private SpriteBatch spriteBatch = null;
+        private SpriteBatch spriteBatchGui = null;
 
         public GameFacade(BaseGame BaseGame)
         {
             this.BaseGame = BaseGame;
-            this.Camera = new Camera();
             graphics = new GraphicsDeviceManager(this);
+
             Content.RootDirectory = "Content";
             Touches = new List<Vector2>();
+        }
 
-            graphics.PreferredBackBufferWidth = 800;
-            graphics.PreferredBackBufferHeight = 480;
+        protected override void Initialize()
+        {
+        
+            base.Initialize();
+
+            graphics.IsFullScreen = true;
+            graphics.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width;
+            graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height;
+            graphics.ApplyChanges();
         }
 
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            spriteBatchGui = new SpriteBatch(GraphicsDevice); ;
 
             BaseGame.Font = Content.Load<SpriteFont>("font");
             BaseGame.Textures = BaseGame.LoadTextures(Content);
 
-            BaseGame.Initialize();
             BaseGame.Ready(BaseGame);
+            BaseGame.Initialize();
         }
 
 
@@ -75,7 +84,8 @@ namespace MonogameFacade
                     }
             }
 
-            Camera.Update(GraphicsDevice);
+            BaseGame.Camera.Update(GraphicsDevice);
+            BaseGame.GuiCamera.Update(GraphicsDevice);
         }
 
         private void CheckCollisions(CollisionDirection direction, Collider source, Collider target)
@@ -104,22 +114,40 @@ namespace MonogameFacade
             BaseGame.Draw(gameTime);
             GraphicsDevice.Clear(Color.Black);
 
+            spriteBatchGui.Begin(
+                SpriteSortMode.Deferred
+                //, BlendState.AlphaBlend
+                , BlendState.NonPremultiplied
+                , SamplerState.PointClamp
+                , DepthStencilState.Default
+                , RasterizerState.CullNone
+                , null
+                , BaseGame.GuiCamera.transform
+            );
+
             spriteBatch.Begin(
-                SpriteSortMode.Deferred,
-                BlendState.AlphaBlend,
-                null,
-                null,
-                null,
-                null
-                , Camera.transform
-                );
+               SpriteSortMode.Deferred
+                //, BlendState.AlphaBlend
+                , BlendState.NonPremultiplied
+                , SamplerState.PointClamp
+                , DepthStencilState.Default
+                , RasterizerState.CullNone
+                , null
+                , BaseGame.Camera.transform
+            );
 
             for (int i = 0; i < BaseGame.Objects.Count; i++)
                 for (var j = 0; j < BaseGame.Objects[i].Renderers.Count; j++)
-                    BaseGame.Objects[i].Renderers[j].Draw(spriteBatch, BaseGame.Objects[i]);
+                    BaseGame
+                        .Objects[i]
+                        .Renderers[j]
+                        .Draw(
+                            spriteBatchGui
+                            , spriteBatch
+                            , BaseGame.Objects[i]);
 
             spriteBatch.End();
-
+            spriteBatchGui.End();
             base.Draw(gameTime);
         }
     }

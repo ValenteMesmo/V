@@ -11,22 +11,26 @@ namespace MonogameFacade
 {
     public abstract class AndroidGame : BaseGame
     {
-        private readonly AssetManager assets;
+        private readonly AssetManager assets = null;
 
         public GameServiceContainer Services { get => GameFacade.Services; }
 
-        public AndroidGame(AssetManager assets):base()
+        public AndroidGame(AssetManager assets) : base()
         {
-            this.assets = assets;            
+            this.assets = assets;
         }
-        
+
         public override void Initialize()
         {
-            GameFacade.graphics.IsFullScreen = true;
-            GameFacade.graphics.PreferredBackBufferFormat = SurfaceFormat.HdrBlendable;
-            GameFacade.graphics.GraphicsProfile = GraphicsProfile.HiDef;
-            GameFacade.graphics.SupportedOrientations = DisplayOrientation.LandscapeLeft;
-            GameFacade.graphics.ApplyChanges();
+            //GameFacade.graphics.IsFullScreen = true;
+            //GameFacade.graphics.PreferredBackBufferWidth = GameFacade.GraphicsDevice.DisplayMode.Width;
+            //GameFacade.graphics.PreferredBackBufferHeight = GameFacade.GraphicsDevice.DisplayMode.Height;
+            ////GameFacade.graphics.PreferredBackBufferWidth = 800;
+            ////GameFacade.graphics.PreferredBackBufferHeight = 600;
+            //GameFacade.graphics.PreferredBackBufferFormat = SurfaceFormat.HdrBlendable;
+            //GameFacade.graphics.GraphicsProfile = GraphicsProfile.HiDef;
+            //GameFacade.graphics.SupportedOrientations = DisplayOrientation.LandscapeLeft;
+            //GameFacade.graphics.ApplyChanges();
         }
 
         public override void Update(GameTime gameTime)
@@ -37,7 +41,7 @@ namespace MonogameFacade
             for (int i = 0; i < state.Count; i++)
                 if (state[i].State > 0)
                     GameFacade.Touches.Add(
-                        GameFacade.Camera.GetWorldPosition(state[i].Position));
+                        Camera.GetWorldPosition(state[i].Position));
 
             GameFacade.ActualUpdate(gameTime);
         }

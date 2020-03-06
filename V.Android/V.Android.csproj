@@ -96,6 +96,10 @@
       <Project>{ac94f57a-4a3e-4bc0-be55-0d06a744687b}</Project>
       <Name>MonogameFacade.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\V\V.csproj">
+      <Project>{b47f8e51-2459-4d6e-8d10-8b0fd0c4d646}</Project>
+      <Name>V</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />
