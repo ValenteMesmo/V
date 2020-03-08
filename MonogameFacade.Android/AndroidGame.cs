@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input.Touch;
-using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -13,46 +12,45 @@ namespace MonogameFacade
     {
         private readonly AssetManager assets = null;
 
-        public GameServiceContainer Services { get => GameFacade.Services; }
-
         public AndroidGame(AssetManager assets) : base()
         {
             this.assets = assets;
         }
 
-        public override void Initialize()
-        {
-            //GameFacade.graphics.IsFullScreen = true;
-            //GameFacade.graphics.PreferredBackBufferWidth = GameFacade.GraphicsDevice.DisplayMode.Width;
-            //GameFacade.graphics.PreferredBackBufferHeight = GameFacade.GraphicsDevice.DisplayMode.Height;
-            ////GameFacade.graphics.PreferredBackBufferWidth = 800;
-            ////GameFacade.graphics.PreferredBackBufferHeight = 600;
-            //GameFacade.graphics.PreferredBackBufferFormat = SurfaceFormat.HdrBlendable;
-            //GameFacade.graphics.GraphicsProfile = GraphicsProfile.HiDef;
-            //GameFacade.graphics.SupportedOrientations = DisplayOrientation.LandscapeLeft;
-            //GameFacade.graphics.ApplyChanges();
-        }
-
-        public override void Update(GameTime gameTime)
+        protected override void Update(GameTime gameTime)
         {
             var state = TouchPanel.GetState();
-            GameFacade.Touches.Clear();
+            Touches.Clear();
 
             for (int i = 0; i < state.Count; i++)
                 if (state[i].State > 0)
-                    GameFacade.Touches.Add(
+                    Touches.Add(
                         Camera.GetWorldPosition(state[i].Position));
 
-            GameFacade.ActualUpdate(gameTime);
+            base.Update(gameTime);
         }
 
-        public override void Draw(GameTime gameTime)
+        protected override void Draw(GameTime gameTime)
         {
             FrameCounter.Update(
                 gameTime.ElapsedGameTime.TotalSeconds);
+
+            base.Draw(gameTime);
         }
 
-        public override Dictionary<string, Texture2D> LoadTextures(ContentManager content)
+        protected override void LoadContent()
+        {
+            base.LoadContent();
+            graphics.IsFullScreen = true;
+            graphics.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width;
+            graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height;
+            graphics.PreferredBackBufferFormat = SurfaceFormat.HdrBlendable;
+            graphics.GraphicsProfile = GraphicsProfile.HiDef;
+            graphics.SupportedOrientations = DisplayOrientation.LandscapeLeft;
+            graphics.ApplyChanges();
+        }
+
+        protected override Dictionary<string, Texture2D> LoadTextures(ContentManager content)
         {
             var result = new Dictionary<string, Texture2D>();
 

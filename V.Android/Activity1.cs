@@ -50,7 +50,7 @@ namespace V.Android
                 | SystemUiFlags.Fullscreen
                 | SystemUiFlags.ImmersiveSticky);
 
-            //Window.AddFlags(WindowManagerFlags.Fullscreen);
+            Window.AddFlags(WindowManagerFlags.Fullscreen);
 
             //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
             //{
