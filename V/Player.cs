@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using MonogameFacade;
+using MonogameFacade.Core.Systems;
 
 namespace V
 {
@@ -27,16 +28,8 @@ namespace V
 
         public override void Update(BaseGame game)
         {
+            MovesUsingKeyboard.Update(game, this);
             Gravity.Apply(this);
-        }
-    }
-
-    public static class Gravity
-    {
-        public static void Apply(GameObject obj)
-        {
-            if (obj.Velocity.Y < 10)
-                obj.Velocity.Y = obj.Velocity.Y + 1;
         }
     }
 }

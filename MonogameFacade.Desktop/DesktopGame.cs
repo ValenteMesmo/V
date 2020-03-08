@@ -15,24 +15,28 @@ namespace MonogameFacade
 
         //DateTime previousUpdate = DateTime.Now;
 
-        public DesktopGame() : base() { }
+        public DesktopGame() : base() { }        
 
-        public override void Draw(GameTime gameTime)
+        protected override void Initialize()
         {
-        }
-
-        public override void Initialize()
-        {
-            GameFacade.IsMouseVisible = true;
-            GameFacade.IsFixedTimeStep = false;
-            GameFacade.graphics.SynchronizeWithVerticalRetrace = false;
-            GameFacade.InactiveSleepTime = new TimeSpan(0);
-            GameFacade.graphics.PreferredBackBufferFormat = SurfaceFormat.HdrBlendable;
+            base.Initialize();
+            //GameFacade.graphics.IsFullScreen = true;
+            IsMouseVisible = true;
+            IsFixedTimeStep = false;
+            graphics.SynchronizeWithVerticalRetrace = false;
+            InactiveSleepTime = new TimeSpan(0);
+            graphics.PreferredBackBufferFormat = SurfaceFormat.HdrBlendable;
             //GameFacade.graphics.GraphicsProfile = GraphicsProfile.HiDef;
-            GameFacade.graphics.ApplyChanges();
+            graphics.PreferredBackBufferWidth =
+                1176;
+            //Camera.windowWidth;
+            graphics.PreferredBackBufferHeight =
+                664;
+                //Camera.windowHeight;
+            graphics.ApplyChanges();
         }
 
-        public override Dictionary<string, Texture2D> LoadTextures(ContentManager content)
+        protected override Dictionary<string, Texture2D> LoadTextures(ContentManager content)
         {
             var result = new Dictionary<string, Texture2D>();
 
@@ -48,7 +52,7 @@ namespace MonogameFacade
         }
         //DateTime currentUpdate;
         //double delta;
-        public override void Update(GameTime gameTime)
+        protected override void Update(GameTime gameTime)
         {
             //currentUpdate = DateTime.Now;
             //delta = (currentUpdate - previousUpdate).TotalSeconds;
@@ -59,20 +63,20 @@ namespace MonogameFacade
             //accumulator = accumulator + delta;
             accumulator = accumulator + gameTime.ElapsedGameTime.TotalSeconds;
 
-            GameFacade.Touches.Clear();
+            Touches.Clear();
             var mouse = Mouse.GetState();
             if (mouse.LeftButton == ButtonState.Pressed)
-                GameFacade.Touches.Add(
-                    GameFacade.Camera.GetWorldPosition(
+                Touches.Add(
+                    Camera.GetWorldPosition(
                         mouse.Position.ToVector2()));
 
             if (accumulator >= dt)
             {
-                GameFacade.ActualUpdate(gameTime);
+                base.Update(gameTime);
                 accumulator = accumulator - dt;
             }
             else
-                GameFacade.SuppressDraw();
+                SuppressDraw();
 
             FrameCounter.Update(accumulator);
         }

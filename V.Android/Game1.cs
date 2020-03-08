@@ -1,4 +1,5 @@
 ﻿using Android.Content.Res;
+using Microsoft.Xna.Framework;
 using MonogameFacade;
 
 namespace V.Android
@@ -9,9 +10,13 @@ namespace V.Android
         {
         }
 
-        public override void Ready(BaseGame game)
+        protected override void LoadContent()
         {
-            game.Objects.Add(new FpsDisplay(game));
+            base.LoadContent();
+            Objects.Add(new Player(this) { Location = new Point(200, 200) });
+            Objects.Add(new WorldBuilder(this));
+            Objects.Add(new FpsDisplay(this));
+            Objects.Add(new Dpad(this));
         }
     }
 }

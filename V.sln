@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29728.190
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "V", "V\V.csproj", "{B47F8E51-2459-4D6E-8D10-8B0FD0C4D646}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "V", "V\V.csproj", "{B47F8E51-2459-4D6E-8D10-8B0FD0C4D646}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MonogameFacade.Core", "MonogameFacade.Core\MonogameFacade.Core.csproj", "{AC94F57A-4A3E-4BC0-BE55-0D06A744687B}"
 EndProject
@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MonogameFacade.Desktop", "M
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MonogameFacade.Android", "MonogameFacade.Android\MonogameFacade.Android.csproj", "{0121D682-772A-459F-89FE-287A24D9F832}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "V.Desktop", "V.Desktop\V.Desktop.csproj", "{5A8ACC39-4A18-40AC-B1ED-8628778DA50A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "V.Desktop", "V.Desktop\V.Desktop.csproj", "{5A8ACC39-4A18-40AC-B1ED-8628778DA50A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "V.Android", "V.Android\V.Android.csproj", "{1D810808-0FDC-4D11-B034-6585CECE623A}"
 EndProject

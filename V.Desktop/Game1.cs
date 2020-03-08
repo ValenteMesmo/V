@@ -1,14 +1,17 @@
-﻿using MonogameFacade;
+﻿using Microsoft.Xna.Framework;
+using MonogameFacade;
 
 namespace V.Desktop
 {
     public class Game1 : DesktopGame
     {
-        public override void Ready(BaseGame game)
+        protected override void LoadContent()
         {
-            game.Objects.Add(new Player(game) { Location = new Microsoft.Xna.Framework.Point(200, 200) });
-            game.Objects.Add(new WorldBuilder(game));
-            game.Objects.Add(new FpsDisplay(game));
+            base.LoadContent();
+            Objects.Add(new Player(this) { Location = new Point(200, 200) });
+            Objects.Add(new WorldBuilder(this));
+            Objects.Add(new FpsDisplay(this));
+            Objects.Add(new Dpad(this));
         }
     }
 }
