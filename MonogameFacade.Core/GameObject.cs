@@ -18,6 +18,6 @@ namespace MonogameFacade
             Renderers = new List<Renderer>();
         }
 
-        public abstract void Update(BaseGame game);
+        public virtual void Update(BaseGame game) { }
     }
 }

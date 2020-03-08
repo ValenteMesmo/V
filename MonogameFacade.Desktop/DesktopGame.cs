@@ -64,11 +64,17 @@ namespace MonogameFacade
             accumulator = accumulator + gameTime.ElapsedGameTime.TotalSeconds;
 
             Touches.Clear();
+            TouchesUi.Clear();
             var mouse = Mouse.GetState();
             if (mouse.LeftButton == ButtonState.Pressed)
+            {
+                TouchesUi.Add(
+                    GuiCamera.GetWorldPosition(
+                        mouse.Position.ToVector2()));
                 Touches.Add(
                     Camera.GetWorldPosition(
                         mouse.Position.ToVector2()));
+            }
 
             if (accumulator >= dt)
             {

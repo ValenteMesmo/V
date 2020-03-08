@@ -8,6 +8,7 @@ namespace MonogameFacade
     public abstract class BaseGame : Game
     {
         public List<Vector2> Touches = null;
+        public List<Vector2> TouchesUi = null;
         private GameObject currentObject = null;
         private Collider currentCollider = null;
         public GraphicsDeviceManager graphics = null;
@@ -37,6 +38,7 @@ namespace MonogameFacade
 
             Content.RootDirectory = "Content";
             Touches = new List<Vector2>();
+            TouchesUi = new List<Vector2>();
         }
 
         protected abstract Dictionary<string, Texture2D> LoadTextures(ContentManager Content);

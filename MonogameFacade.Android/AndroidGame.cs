@@ -21,11 +21,16 @@ namespace MonogameFacade
         {
             var state = TouchPanel.GetState();
             Touches.Clear();
+            TouchesUi.Clear();
 
             for (int i = 0; i < state.Count; i++)
                 if (state[i].State > 0)
+                {
+                    TouchesUi.Add(
+                        GuiCamera.GetWorldPosition(state[i].Position));
                     Touches.Add(
                         Camera.GetWorldPosition(state[i].Position));
+                }
 
             base.Update(gameTime);
         }

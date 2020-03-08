@@ -15,6 +15,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "V.Desktop", "V.Desktop\V.De
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "V.Android", "V.Android\V.Android.csproj", "{1D810808-0FDC-4D11-B034-6585CECE623A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonogameFacade.Core.Test", "MonogameFacade.Core.Test\MonogameFacade.Core.Test.csproj", "{8D6DE189-E7E8-443F-B371-D4E01DEC7868}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,6 +49,10 @@ Global
 		{1D810808-0FDC-4D11-B034-6585CECE623A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1D810808-0FDC-4D11-B034-6585CECE623A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1D810808-0FDC-4D11-B034-6585CECE623A}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{8D6DE189-E7E8-443F-B371-D4E01DEC7868}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D6DE189-E7E8-443F-B371-D4E01DEC7868}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D6DE189-E7E8-443F-B371-D4E01DEC7868}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D6DE189-E7E8-443F-B371-D4E01DEC7868}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -55,7 +55,7 @@ namespace MonogameFacade
         {
             Target.Location = Offset + Parent.Location;
             Target.Size = Size;
-
+            
             batchGui.Draw(
                 Texture
                 , Target
