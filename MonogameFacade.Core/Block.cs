@@ -4,11 +4,13 @@ namespace MonogameFacade
 {
     public class Block : GameObject
     {
+        public const int Size = 1000;
+
         public Block(BaseGame game)
         {
             var sprite = new SpriteRenderer();
             sprite.Texture = game.Textures["btn"];
-            sprite.Size = new Point(100, 100);
+            sprite.Size = new Point(Size, Size);
             Renderers.Add(sprite);
 
             var collider = new Collider(this);

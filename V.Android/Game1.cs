@@ -13,10 +13,11 @@ namespace V.Android
         protected override void LoadContent()
         {
             base.LoadContent();
-            Objects.Add(new Player(this) { Location = new Point(200, 200) });
+            var player = new Player(this) { Location = new Point(200, 200) };
+            Objects.Add(new Dpad(this, player.inputTouch));
+            Objects.Add(player);
             Objects.Add(new WorldBuilder(this));
             Objects.Add(new FpsDisplay(this));
-            Objects.Add(new Dpad(this));
         }
     }
 }

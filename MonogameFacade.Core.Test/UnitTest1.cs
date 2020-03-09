@@ -27,7 +27,7 @@ namespace MonogameFacade.Core.Test
         public void LeftFromNone()
         {
             var game = new TestGame();
-            var sut = new Dpad(game);
+            var sut = new Dpad(game, new Systems.InputKeeper());
 
             var touch = (sut.touchArea.Center + new Point(Dpad.minDistance + 1, 0))
                 .ToVector2();
@@ -44,7 +44,7 @@ namespace MonogameFacade.Core.Test
         public void RightFromRight()
         {
             var game = new TestGame();
-            var sut = new Dpad(game);
+            var sut = new Dpad(game, new Systems.InputKeeper());
 
             var touch = (sut.touchArea.Center + new Point(Dpad.minDistance + 1, 0))
                 .ToVector2();
@@ -63,7 +63,7 @@ namespace MonogameFacade.Core.Test
         public void NoneFromRight()
         {
             var game = new TestGame();
-            var sut = new Dpad(game);
+            var sut = new Dpad(game, new Systems.InputKeeper());
 
             var touch = (sut.touchArea.Center + new Point(Dpad.minDistance + 1, 0))
                 .ToVector2();

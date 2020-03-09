@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using MonogameFacade.Core.Systems;
 using System;
 
 namespace MonogameFacade
@@ -10,6 +11,7 @@ namespace MonogameFacade
 
     public class Dpad : GameObject
     {
+        private InputKeeper input = null;
         public GuiSpriteRenderer sprite;
         public Rectangle touchArea;
         public Vector2 delta;
@@ -20,8 +22,9 @@ namespace MonogameFacade
         public DpadDirection PreviousDirection;
         public Vector2 DpadCenter;
 
-        public Dpad(BaseGame game)
+        public Dpad(BaseGame game, InputKeeper input)
         {
+            this.input = input;
             sprite = new GuiSpriteRenderer();
             sprite.Texture = game.Textures["shadedDark04"];
             sprite.Size = new Point(180, 180);
@@ -34,13 +37,49 @@ namespace MonogameFacade
             touchArea = new Rectangle(Location, sprite.Size);
             DpadCenter = touchArea.Center.ToVector2();
             touchArea = new Rectangle(
-                Location.X - (extraSize /2)
-                , Location.Y - (extraSize /2)
+                Location.X - (extraSize / 2)
+                , Location.Y - (extraSize / 2)
                 , sprite.Size.X + extraSize
                 , sprite.Size.Y + extraSize);
         }
 
         public override void Update(BaseGame game)
+        {
+            CalculateDpadDirection(game);
+
+            switch (CurrentDirection)
+            {
+                case DpadDirection.None:
+                    UpdateInput();
+                    break;
+                case DpadDirection.Up:
+                    UpdateInput(up: true);
+                    break;
+                case DpadDirection.Down:
+                    UpdateInput(down: true);
+                    break;
+                case DpadDirection.Left:
+                    UpdateInput(left: true);
+                    break;
+                case DpadDirection.Right:
+                    UpdateInput(right: true);
+                    break;
+            }
+        }
+
+        private void UpdateInput(
+            bool up = false
+            , bool down = false
+            , bool left = false
+            , bool right = false)
+        {
+            input.Up = up;
+            input.Down = down;
+            input.Left = left;
+            input.Right = right;
+        }
+
+        private void CalculateDpadDirection(BaseGame game)
         {
             switch (CurrentDirection)
             {
@@ -91,30 +130,51 @@ namespace MonogameFacade
 
                     if (fingerWentRight)
                     {
+                        input.Right = true;
+                        input.Right = true;
+                        input.Right = true;
+                        input.Right = true;
                         CurrentDirection = DpadDirection.Right;
                         DpadCenter = game.TouchesUi[i];
                         DpadCenter.X = DpadCenter.X - minDistance - minDistanceHalf;
                     }
                     else if (fingerWentLeft)
                     {
+                        input.Right = true;
+                        input.Right = true;
+                        input.Right = true;
+                        input.Left = true;
                         CurrentDirection = DpadDirection.Left;
                         DpadCenter = game.TouchesUi[i];
                         DpadCenter.X = DpadCenter.X + minDistance + minDistanceHalf;
                     }
                     else if (fingerWentDown)
                     {
+                        input.Right = true;
+                        input.Right = true;
+                        input.Right = true;
+                        input.Right = true;
                         CurrentDirection = DpadDirection.Down;
                         DpadCenter = game.TouchesUi[i];
                         DpadCenter.Y = DpadCenter.Y - minDistance - minDistanceHalf;
                     }
                     else if (fingerWentUp)
                     {
+                        input.Right = true;
+                        input.Right = true;
+                        input.Right = true;
+                        input.Right = true;
                         CurrentDirection = DpadDirection.Up;
                         DpadCenter = game.TouchesUi[i];
                         DpadCenter.Y = DpadCenter.Y + minDistance + minDistanceHalf;
                     }
                     else
                     {
+                        input.Right = true;
+                        input.Right = true;
+                        input.Right = true;
+                        input.Right = true;
+
                         CurrentDirection = PreviousDirection;
                         return;
                     }

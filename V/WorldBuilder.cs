@@ -9,6 +9,8 @@ namespace V
     {
         public WorldBuilder(BaseGame game)
         {
+            Location = new Point(-1500, -1500);
+
             for (int i = 0; i < 15; i++)
                 for (int j = 0; j < 10; j++)
                     if (j == 0 || i == 0 || j == 9 || i == 14)
@@ -18,8 +20,9 @@ namespace V
         private void AddBlock(BaseGame game, int i, int j)
         {
             var block = new Block(game);
-            block.Location.X = i * 100;
-            block.Location.Y = j * 100;
+            block.Location = Location;
+            block.Location.X = block.Location.X + i * Block.Size;
+            block.Location.Y = block.Location.Y + j * Block.Size;
             game.Objects.Add(block);
         }
 

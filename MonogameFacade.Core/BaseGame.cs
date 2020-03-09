@@ -28,7 +28,7 @@ namespace MonogameFacade
         {
             this.Camera = new Camera();
             this.GuiCamera = new Camera() ;
-            Camera.Zoom = 0.05f;
+            Camera.Zoom = 0.04f;
             GuiCamera.Zoom = 1f;
 
             Objects = new List<GameObject>();
