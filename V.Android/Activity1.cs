@@ -22,7 +22,19 @@ namespace V.Android
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
+
             game = new Game1(Assets);
+
+            if (Build.VERSION.SdkInt >= BuildVersionCodes.O)
+            {
+                Vibrator vibrator = (Vibrator)GetSystemService(VibratorService);
+                game.Vibrate = f => vibrator.Vibrate(VibrationEffect.CreateOneShot(f, 1));
+            }
+            else
+            {
+                //TODO:   
+            }
+
             SetViewFullScreen();
             game.Run();
         }

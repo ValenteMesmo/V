@@ -1,12 +1,14 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
 
 namespace MonogameFacade
 {
     public abstract class BaseGame : Game
     {
+        public Action<long> Vibrate = f => { };
         public List<Vector2> Touches = null;
         public List<Vector2> TouchesUi = null;
         private GameObject currentObject = null;

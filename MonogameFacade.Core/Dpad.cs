@@ -16,11 +16,11 @@ namespace MonogameFacade
         public Rectangle touchArea;
         public Vector2 delta;
         public const int minDistance = 30;
-        public const int extraSize = 300;
-        public const int minDistanceHalf = 30;
+        public const int extraSize = 150;
         public DpadDirection CurrentDirection;
         public DpadDirection PreviousDirection;
         public Vector2 DpadCenter;
+        public Vector2 previousTouch;
 
         public Dpad(BaseGame game, InputKeeper input)
         {
@@ -35,7 +35,7 @@ namespace MonogameFacade
             //sprite.Offset = new Point(-350, -150);
             Renderers.Add(sprite);
             touchArea = new Rectangle(Location, sprite.Size);
-            DpadCenter = touchArea.Center.ToVector2();
+            previousTouch = DpadCenter = touchArea.Center.ToVector2();
             touchArea = new Rectangle(
                 Location.X - (extraSize / 2)
                 , Location.Y - (extraSize / 2)
@@ -45,24 +45,34 @@ namespace MonogameFacade
 
         public override void Update(BaseGame game)
         {
-            CalculateDpadDirection(game);
+            var newDirection = CalculateDpadDirection(game);
+            PreviousDirection = CurrentDirection;
+            CurrentDirection = newDirection;
+
+            if (CurrentDirection != PreviousDirection)
+                game.Vibrate(TouchVibration);
 
             switch (CurrentDirection)
             {
                 case DpadDirection.None:
                     UpdateInput();
+                    sprite.Color = Color.White;
                     break;
                 case DpadDirection.Up:
                     UpdateInput(up: true);
+                    sprite.Color = Color.Yellow;
                     break;
                 case DpadDirection.Down:
                     UpdateInput(down: true);
+                    sprite.Color = Color.Magenta;
                     break;
                 case DpadDirection.Left:
                     UpdateInput(left: true);
+                    sprite.Color = Color.Red;
                     break;
                 case DpadDirection.Right:
                     UpdateInput(right: true);
+                    sprite.Color = Color.Blue;
                     break;
             }
         }
@@ -79,111 +89,217 @@ namespace MonogameFacade
             input.Right = right;
         }
 
-        private void CalculateDpadDirection(BaseGame game)
+        private const int TouchVibration = 1;
+        private const int UntouchVibration = 1;
+
+        private DpadDirection CalculateDpadDirection(BaseGame game)
         {
-            switch (CurrentDirection)
-            {
-                case DpadDirection.Up:
-                    sprite.Color = Color.Yellow;
-                    break;
-                case DpadDirection.Down:
-                    sprite.Color = Color.Magenta;
-                    break;
-                case DpadDirection.Left:
-                    sprite.Color = Color.Red;
-                    break;
-                case DpadDirection.Right:
-                    sprite.Color = Color.Blue;
-                    break;
-                default:
-                    sprite.Color = Color.White;
-                    break;
-            }
-
             for (int i = 0; i < game.TouchesUi.Count; i++)
-            {
                 if (touchArea.Contains(game.TouchesUi[i]))
-                {
-                    delta = DpadCenter - game.TouchesUi[i];
-                    var distanceXAbs = Math.Abs(delta.X);
-                    var distanceYAbs = Math.Abs(delta.Y);
-
-                    var fingerWentRight =
-                        distanceXAbs > minDistance
-                        && distanceXAbs > distanceYAbs
-                        && delta.X < 0;
-
-                    var fingerWentLeft =
-                        distanceXAbs > minDistance
-                        && distanceXAbs > distanceYAbs
-                        && delta.X > 0;
-
-                    var fingerWentDown =
-                        distanceYAbs > minDistance
-                        && distanceYAbs > distanceXAbs
-                        && delta.Y < 0;
-
-                    var fingerWentUp =
-                        distanceYAbs > minDistance
-                        && distanceYAbs > distanceXAbs
-                        && delta.Y > 0;
-
-                    if (fingerWentRight)
-                    {
-                        input.Right = true;
-                        input.Right = true;
-                        input.Right = true;
-                        input.Right = true;
-                        CurrentDirection = DpadDirection.Right;
-                        DpadCenter = game.TouchesUi[i];
-                        DpadCenter.X = DpadCenter.X - minDistance - minDistanceHalf;
-                    }
-                    else if (fingerWentLeft)
-                    {
-                        input.Right = true;
-                        input.Right = true;
-                        input.Right = true;
-                        input.Left = true;
-                        CurrentDirection = DpadDirection.Left;
-                        DpadCenter = game.TouchesUi[i];
-                        DpadCenter.X = DpadCenter.X + minDistance + minDistanceHalf;
-                    }
-                    else if (fingerWentDown)
-                    {
-                        input.Right = true;
-                        input.Right = true;
-                        input.Right = true;
-                        input.Right = true;
-                        CurrentDirection = DpadDirection.Down;
-                        DpadCenter = game.TouchesUi[i];
-                        DpadCenter.Y = DpadCenter.Y - minDistance - minDistanceHalf;
-                    }
-                    else if (fingerWentUp)
-                    {
-                        input.Right = true;
-                        input.Right = true;
-                        input.Right = true;
-                        input.Right = true;
-                        CurrentDirection = DpadDirection.Up;
-                        DpadCenter = game.TouchesUi[i];
-                        DpadCenter.Y = DpadCenter.Y + minDistance + minDistanceHalf;
-                    }
+                    if (PreviousDirection == DpadDirection.Right)
+                        return CalculationsFromTheRight(game.TouchesUi[i]);
+                    else if (PreviousDirection == DpadDirection.Left)
+                        return CalculationsFromTheLeft(game.TouchesUi[i]);
+                    else if (PreviousDirection == DpadDirection.Up)
+                        return CalculationsFromUp(game.TouchesUi[i]);
+                    else if (PreviousDirection == DpadDirection.Down)
+                        return CalculationsFromDown(game.TouchesUi[i]);
                     else
-                    {
-                        input.Right = true;
-                        input.Right = true;
-                        input.Right = true;
-                        input.Right = true;
+                        return CalculationsFromNone(game.TouchesUi[i]);
 
-                        CurrentDirection = PreviousDirection;
-                        return;
-                    }
+            return DpadDirection.None;
+        }
 
-                    PreviousDirection = CurrentDirection;
-                    return;
-                }
-            }
-            CurrentDirection = DpadDirection.None;
+        private DpadDirection CalculationsFromTheRight(Vector2 touch)
+        {
+            delta = previousTouch - touch;
+            var distanceXAbs = Math.Abs(delta.X);
+            var distanceYAbs = Math.Abs(delta.Y);
+
+            var fingerWentLeft =
+                distanceXAbs > minDistance
+                && distanceXAbs > distanceYAbs
+                && delta.X > 0;
+
+            var fingerWentDown =
+                distanceYAbs > minDistance
+                && distanceXAbs < distanceYAbs
+                && delta.Y < 0;
+
+            var fingerWentUp =
+                distanceYAbs > minDistance
+                && distanceXAbs < distanceYAbs
+                && delta.Y > 0;
+
+            if (fingerWentLeft)
+                if (fingerWentUp)
+                    return DpadDirection.Up;
+                else if (fingerWentDown)
+                    return DpadDirection.Down;
+                else
+                    return DpadDirection.Left;
+            else if (fingerWentUp)
+                return DpadDirection.Up;
+            else if (fingerWentDown)
+                return DpadDirection.Down;
+            else
+                return DpadDirection.Right;
+        }
+
+        private DpadDirection CalculationsFromTheLeft(Vector2 touch)
+        {
+            delta = previousTouch - touch;
+            var distanceXAbs = Math.Abs(delta.X);
+            var distanceYAbs = Math.Abs(delta.Y);
+
+            var fingerWentRight =
+                distanceXAbs > minDistance
+                && distanceXAbs > distanceYAbs
+                && delta.X < 0;
+
+            var fingerWentDown =
+                distanceYAbs > minDistance
+                && distanceXAbs < distanceYAbs
+                && delta.Y < 0;
+
+            var fingerWentUp =
+                distanceYAbs > minDistance
+                && distanceXAbs < distanceYAbs
+                && delta.Y > 0;
+
+            if (fingerWentRight)
+                if (fingerWentUp)
+                    return DpadDirection.Up;
+                else if (fingerWentDown)
+                    return DpadDirection.Down;
+                else
+                    return DpadDirection.Right;
+            else if (fingerWentUp)
+                return DpadDirection.Up;
+            else if (fingerWentDown)
+                return DpadDirection.Down;
+            else
+                return DpadDirection.Left;
+        }
+
+        private DpadDirection CalculationsFromUp(Vector2 touch)
+        {
+            delta = previousTouch - touch;
+            var distanceXAbs = Math.Abs(delta.X);
+            var distanceYAbs = Math.Abs(delta.Y);
+
+            var fingerWentRight =
+                distanceXAbs > minDistance
+                && distanceXAbs > distanceYAbs
+                && delta.X < 0;
+
+            var fingerWentLeft =
+                distanceXAbs > minDistance
+                && distanceXAbs > distanceYAbs
+                && delta.X > 0;
+
+            var fingerWentDown =
+                distanceYAbs > minDistance
+                && distanceXAbs < distanceYAbs
+                && delta.Y < 0;
+
+            if (fingerWentDown)
+                if (fingerWentRight)
+                    return CurrentDirection = DpadDirection.Right;
+                else if (fingerWentLeft)
+                    return CurrentDirection = DpadDirection.Left;
+                else
+                    return DpadDirection.Down;
+            else if (fingerWentLeft)
+                return DpadDirection.Left;
+            else if (fingerWentRight)
+                return DpadDirection.Right;
+            else
+                return DpadDirection.Up;
+        }
+
+        private DpadDirection CalculationsFromDown(Vector2 touch)
+        {
+            delta = previousTouch - touch;
+            var distanceXAbs = Math.Abs(delta.X);
+            var distanceYAbs = Math.Abs(delta.Y);
+
+            var fingerWentRight =
+                distanceXAbs > minDistance
+                && distanceXAbs > distanceYAbs
+                && delta.X < 0;
+
+            var fingerWentLeft =
+                distanceXAbs > minDistance
+                && distanceXAbs > distanceYAbs
+                && delta.X > 0;
+
+            var fingerWentUp =
+                distanceYAbs > minDistance
+                && distanceXAbs < distanceYAbs
+                && delta.Y > 0;
+
+            if (fingerWentUp)
+                if (fingerWentRight)
+                    return DpadDirection.Right;
+                else if (fingerWentLeft)
+                    return DpadDirection.Left;
+                else
+                    return DpadDirection.Up;
+            else if (fingerWentRight)
+                return DpadDirection.Right;
+            else if (fingerWentLeft)
+                return DpadDirection.Left;
+            else
+                return DpadDirection.Down;
+        }
+
+        private DpadDirection CalculationsFromNone(Vector2 touch)
+        {
+            delta = previousTouch - touch;
+            var distanceXAbs = Math.Abs(delta.X);
+            var distanceYAbs = Math.Abs(delta.Y);
+
+            var fingerWentRight =
+                distanceXAbs > minDistance
+                && distanceXAbs > distanceYAbs
+                && delta.X < 0;
+
+            var fingerWentLeft =
+                distanceXAbs > minDistance
+                && distanceXAbs > distanceYAbs
+                && delta.X > 0;
+
+            var fingerWentDown =
+                distanceYAbs > minDistance
+                && distanceXAbs < distanceYAbs
+                && delta.Y < 0;
+
+            var fingerWentUp =
+                distanceYAbs > minDistance
+                && distanceXAbs < distanceYAbs
+                && delta.Y > 0;
+
+            if (fingerWentRight)
+                if (fingerWentUp)
+                    return DpadDirection.Up;
+                else if (fingerWentDown)
+                    return DpadDirection.Down;
+                else
+                    return DpadDirection.Right;
+            else if (fingerWentLeft)
+                if (fingerWentUp)
+                    return DpadDirection.Up;
+                else if (fingerWentDown)
+                    return DpadDirection.Down;
+                else
+                    return DpadDirection.Left;
+            else if (fingerWentUp)
+                return DpadDirection.Up;
+            else if (fingerWentDown)
+                return DpadDirection.Down;
+            else
+                return DpadDirection.None;
         }
     }
 }

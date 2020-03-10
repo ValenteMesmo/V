@@ -21,7 +21,7 @@ namespace MonogameFacade.Core.Test
         }
     }
 
-    public class UnitTest1
+    public class DpadTests
     {
         [Fact]
         public void LeftFromNone()
