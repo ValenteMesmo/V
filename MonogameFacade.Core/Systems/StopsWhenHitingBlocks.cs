@@ -35,7 +35,9 @@
             if (target.Parent is Block)
             {
                 //TODO: - offsetY
-                Source.Parent.Location.Y = target.Bottom() + target.Height + 1;
+                Source.Parent.Location.Y = 
+                    target.Bottom() 
+                    + 1;
                 Source.Parent.Velocity.Y = 0;
             }
         }

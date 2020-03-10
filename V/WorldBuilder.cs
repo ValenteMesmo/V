@@ -10,7 +10,16 @@ namespace V
         public WorldBuilder(BaseGame game)
         {
             Location = new Point(-1500, -1500);
+            AddBlocks(game);
+            var player = new Player(game) { Location = new Point(200, 200) };
+            game.Objects.Add(new Dpad(game, player.inputTouch));
+            game.Objects.Add(new ActionButtons(game, player.inputTouchAction));
+            game.Objects.Add(player);
+            game.Objects.Add(new FpsDisplay(game));
+        }
 
+        private void AddBlocks(BaseGame game)
+        {
             for (int i = 0; i < 15; i++)
                 for (int j = 0; j < 10; j++)
                     if (j == 0 || i == 0 || j == 9 || i == 14)

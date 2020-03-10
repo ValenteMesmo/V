@@ -9,38 +9,30 @@ namespace MonogameFacade
         None, Up, Down, Left, Right
     }
 
-    public class Dpad : GameObject
+    public abstract class BaseFourTouchanleButtons : GameObject
     {
-        private InputKeeper input = null;
-        public GuiSpriteRenderer sprite;
+        protected InputKeeper input = null;
         public Rectangle touchArea;
         public Vector2 delta;
         public const int minDistance = 30;
         public const int extraSize = 150;
+        public const int Size = 180;
         public DpadDirection CurrentDirection;
         public DpadDirection PreviousDirection;
         public Vector2 DpadCenter;
         public Vector2 previousTouch;
+        protected Color Color;
 
-        public Dpad(BaseGame game, InputKeeper input)
+        public BaseFourTouchanleButtons(BaseGame game, InputKeeper input)
         {
             this.input = input;
-            sprite = new GuiSpriteRenderer();
-            sprite.Texture = game.Textures["shadedDark04"];
-            sprite.Size = new Point(180, 180);
-            Location.X = -600;
-            Location.Y = -320;
-            //sprite.Offset = new Point(-1400, -750);
-            //sprite.Offset = new Point(-585, -300);
-            //sprite.Offset = new Point(-350, -150);
-            Renderers.Add(sprite);
-            touchArea = new Rectangle(Location, sprite.Size);
+            touchArea = new Rectangle(Location, new Point(Size, Size));
             previousTouch = DpadCenter = touchArea.Center.ToVector2();
             touchArea = new Rectangle(
                 Location.X - (extraSize / 2)
                 , Location.Y - (extraSize / 2)
-                , sprite.Size.X + extraSize
-                , sprite.Size.Y + extraSize);
+                , Size + extraSize
+                , Size + extraSize);
         }
 
         public override void Update(BaseGame game)
@@ -56,23 +48,23 @@ namespace MonogameFacade
             {
                 case DpadDirection.None:
                     UpdateInput();
-                    sprite.Color = Color.White;
+                    Color = Color.White;
                     break;
                 case DpadDirection.Up:
                     UpdateInput(up: true);
-                    sprite.Color = Color.Yellow;
+                    Color = Color.Yellow;
                     break;
                 case DpadDirection.Down:
                     UpdateInput(down: true);
-                    sprite.Color = Color.Magenta;
+                    Color = Color.Magenta;
                     break;
                 case DpadDirection.Left:
                     UpdateInput(left: true);
-                    sprite.Color = Color.Red;
+                    Color = Color.Red;
                     break;
                 case DpadDirection.Right:
                     UpdateInput(right: true);
-                    sprite.Color = Color.Blue;
+                    Color = Color.Blue;
                     break;
             }
         }
@@ -301,5 +293,59 @@ namespace MonogameFacade
             else
                 return DpadDirection.None;
         }
+    }
+
+    public class Dpad : BaseFourTouchanleButtons
+    {
+        public GuiSpriteRenderer sprite = null;
+
+        public Dpad(BaseGame game, InputKeeper input) : base(game, input)
+        {
+            sprite = new GuiSpriteRenderer();
+            sprite.Texture = game.Textures["shadedDark04"];
+            sprite.Size = new Point(180, 180);
+            Location.X = -600;
+            Location.Y = -320;
+            //sprite.Offset = new Point(-1400, -750);
+            //sprite.Offset = new Point(-585, -300);
+            //sprite.Offset = new Point(-350, -150);
+            Renderers.Add(sprite);
+            touchArea = new Rectangle(Location, sprite.Size);
+            previousTouch = DpadCenter = touchArea.Center.ToVector2();
+            touchArea = new Rectangle(
+                Location.X - (extraSize / 2)
+                , Location.Y - (extraSize / 2)
+                , sprite.Size.X + extraSize
+                , sprite.Size.Y + extraSize);
+        }
+
+
+    }
+
+    public class ActionButtons: BaseFourTouchanleButtons
+    {
+        public GuiSpriteRenderer sprite = null;
+
+        public ActionButtons(BaseGame game, InputKeeper input) : base(game, input)
+        {
+            sprite = new GuiSpriteRenderer();
+            sprite.Texture = game.Textures["shadedDark04"];
+            sprite.Size = new Point(180, 180);
+            Location.X = 420;
+            Location.Y = -320;
+            //sprite.Offset = new Point(-1400, -750);
+            //sprite.Offset = new Point(-585, -300);
+            //sprite.Offset = new Point(-350, -150);
+            Renderers.Add(sprite);
+            touchArea = new Rectangle(Location, sprite.Size);
+            previousTouch = DpadCenter = touchArea.Center.ToVector2();
+            touchArea = new Rectangle(
+                Location.X - (extraSize / 2)
+                , Location.Y - (extraSize / 2)
+                , sprite.Size.X + extraSize
+                , sprite.Size.Y + extraSize);
+        }
+
+
     }
 }

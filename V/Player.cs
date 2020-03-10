@@ -10,10 +10,12 @@ namespace V
         private Collider collider = null;
         public InputKeeper input = null;
         public InputKeeper inputTouch = null;
+        public InputKeeper inputTouchAction = null;
         public Player(BaseGame game)
         {
             input = new InputKeeper();
             inputTouch = new InputKeeper();
+            inputTouchAction = new InputKeeper();
             IsPassive = false;
             sprite = new SpriteRenderer
             {
@@ -33,6 +35,7 @@ namespace V
         {
             SetInputUsingKeyboard.Update(input);
             MovesUsingKeyboard.Update(this, input, inputTouch);
+            JumpsUsingInput.Update(this, inputTouchAction);
             Gravity.Apply(this);
         }
     }

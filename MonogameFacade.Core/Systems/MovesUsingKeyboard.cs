@@ -41,4 +41,15 @@ namespace MonogameFacade.Core.Systems
                 obj.Velocity.X = 0;
         }
     }
+
+    public static class JumpsUsingInput
+    {
+        public static void Update(
+            GameObject obj
+            , InputKeeper inputs)
+        {
+            if (inputs.Down )
+                obj.Velocity.Y = -90;
+        }
+    }
 }

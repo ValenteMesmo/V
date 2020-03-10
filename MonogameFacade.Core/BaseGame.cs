@@ -8,7 +8,7 @@ namespace MonogameFacade
 {
     public abstract class BaseGame : Game
     {
-        public Action<long> Vibrate = f => { };
+        public Action<long> Vibrate = null;
         public List<Vector2> Touches = null;
         public List<Vector2> TouchesUi = null;
         private GameObject currentObject = null;
@@ -28,6 +28,7 @@ namespace MonogameFacade
 
         public BaseGame()
         {
+            Vibrate = f => { };
             this.Camera = new Camera();
             this.GuiCamera = new Camera() ;
             Camera.Zoom = 0.04f;
