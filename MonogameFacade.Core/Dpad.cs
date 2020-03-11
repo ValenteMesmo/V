@@ -16,7 +16,7 @@ namespace MonogameFacade
         public Vector2 delta;
         public const int minDistance = 30;
         public const int extraSize = 150;
-        public const int Size = 180;
+        public const int Size = 160;
         public DpadDirection CurrentDirection;
         public DpadDirection PreviousDirection;
         public Vector2 DpadCenter;
@@ -301,9 +301,16 @@ namespace MonogameFacade
 
         public Dpad(BaseGame game, InputKeeper input) : base(game, input)
         {
+            var sprite2 = new GuiSpriteRenderer();
+            sprite2.Texture = game.Textures["btn"];
+            sprite2.Size = new Point(Size, Size);
+            sprite2.Color = Color.DarkGray;
+            Renderers.Add(sprite2);
+
+
             sprite = new GuiSpriteRenderer();
             sprite.Texture = game.Textures["shadedDark04"];
-            sprite.Size = new Point(180, 180);
+            sprite.Size = new Point(Size, Size);
             Location.X = -600;
             Location.Y = -320;
             //sprite.Offset = new Point(-1400, -750);
@@ -317,33 +324,65 @@ namespace MonogameFacade
                 , Location.Y - (extraSize / 2)
                 , sprite.Size.X + extraSize
                 , sprite.Size.Y + extraSize);
+
+            sprite2.Size = touchArea.Size;
+            sprite2.Offset = new Point(-(extraSize / 2), -(extraSize / 2));
         }
 
 
     }
 
-    public class ActionButtons: BaseFourTouchanleButtons
+    public class ActionButtons : BaseFourTouchanleButtons
     {
-        public GuiSpriteRenderer sprite = null;
+        const int buttonSize = 70;
 
         public ActionButtons(BaseGame game, InputKeeper input) : base(game, input)
         {
-            sprite = new GuiSpriteRenderer();
-            sprite.Texture = game.Textures["shadedDark04"];
-            sprite.Size = new Point(180, 180);
             Location.X = 420;
             Location.Y = -320;
-            //sprite.Offset = new Point(-1400, -750);
-            //sprite.Offset = new Point(-585, -300);
-            //sprite.Offset = new Point(-350, -150);
+
+            var sprite = new GuiSpriteRenderer();
+            sprite.Texture = game.Textures["btn"];
+            sprite.Size = new Point(Size, Size);
+            sprite.Color = Color.DarkGray;
             Renderers.Add(sprite);
-            touchArea = new Rectangle(Location, sprite.Size);
+
+            var sprite1 = new GuiSpriteRenderer();
+            sprite1.Texture = game.Textures["shadedDark39"];
+            sprite1.Offset = new Point(45, -10);
+            sprite1.Size = new Point(buttonSize, buttonSize);
+            Renderers.Add(sprite1);
+
+            var sprite2 = new GuiSpriteRenderer();
+            sprite2.Texture = game.Textures["shadedDark37"];
+            sprite2.Offset = new Point(100, 45);
+            sprite2.Size = new Point(buttonSize, buttonSize);
+            Renderers.Add(sprite2);
+
+            var sprite3 = new GuiSpriteRenderer();
+            sprite3.Texture = game.Textures["shadedDark36"];
+            sprite3.Offset = new Point(45, 100);
+            sprite3.Size = new Point(buttonSize, buttonSize);
+            Renderers.Add(sprite3);
+
+
+            var sprite4 = new GuiSpriteRenderer();
+            sprite4.Texture = game.Textures["shadedDark38"];
+            sprite4.Offset = new Point(-10, 45);
+            sprite4.Size = new Point(buttonSize, buttonSize);
+            Renderers.Add(sprite4);
+
+
+            touchArea = new Rectangle(Location, new Point(Size, Size));
             previousTouch = DpadCenter = touchArea.Center.ToVector2();
             touchArea = new Rectangle(
                 Location.X - (extraSize / 2)
                 , Location.Y - (extraSize / 2)
-                , sprite.Size.X + extraSize
-                , sprite.Size.Y + extraSize);
+                , Size + extraSize
+                , Size + extraSize);
+
+            sprite.Size = touchArea.Size;
+            sprite.Offset = new Point(-(extraSize / 2), -(extraSize / 2));
         }
 
 
