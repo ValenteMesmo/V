@@ -305,7 +305,7 @@ namespace MonogameFacade
             sprite2.Texture = game.Textures["btn"];
             sprite2.Size = new Point(Size, Size);
             sprite2.Color = Color.DarkGray;
-            Renderers.Add(sprite2);
+            //Renderers.Add(sprite2);
 
 
             sprite = new GuiSpriteRenderer();
@@ -338,14 +338,14 @@ namespace MonogameFacade
 
         public ActionButtons(BaseGame game, InputKeeper input) : base(game, input)
         {
-            Location.X = 420;
+            Location.X = 430;
             Location.Y = -320;
 
             var sprite = new GuiSpriteRenderer();
             sprite.Texture = game.Textures["btn"];
             sprite.Size = new Point(Size, Size);
             sprite.Color = Color.DarkGray;
-            Renderers.Add(sprite);
+            //Renderers.Add(sprite);
 
             var sprite1 = new GuiSpriteRenderer();
             sprite1.Texture = game.Textures["shadedDark39"];
@@ -365,13 +365,11 @@ namespace MonogameFacade
             sprite3.Size = new Point(buttonSize, buttonSize);
             Renderers.Add(sprite3);
 
-
             var sprite4 = new GuiSpriteRenderer();
             sprite4.Texture = game.Textures["shadedDark38"];
             sprite4.Offset = new Point(-10, 45);
             sprite4.Size = new Point(buttonSize, buttonSize);
             Renderers.Add(sprite4);
-
 
             touchArea = new Rectangle(Location, new Point(Size, Size));
             previousTouch = DpadCenter = touchArea.Center.ToVector2();
@@ -384,7 +382,5 @@ namespace MonogameFacade
             sprite.Size = touchArea.Size;
             sprite.Offset = new Point(-(extraSize / 2), -(extraSize / 2));
         }
-
-
     }
 }

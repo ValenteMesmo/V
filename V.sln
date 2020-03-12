@@ -15,7 +15,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "V.Desktop", "V.Desktop\V.De
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "V.Android", "V.Android\V.Android.csproj", "{1D810808-0FDC-4D11-B034-6585CECE623A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonogameFacade.Core.Test", "MonogameFacade.Core.Test\MonogameFacade.Core.Test.csproj", "{8D6DE189-E7E8-443F-B371-D4E01DEC7868}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MonogameFacade.Core.Test", "MonogameFacade.Core.Test\MonogameFacade.Core.Test.csproj", "{8D6DE189-E7E8-443F-B371-D4E01DEC7868}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MonoGameFacade", "MonoGameFacade", "{506A12AE-1957-4A39-A69F-B27E05E721E9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Skeletor", "Skeletor\Skeletor.csproj", "{6F85523B-A083-4EE8-B4AB-C6C7199E66FF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AnimationTool", "AnimationTool", "{CCA920FF-3E5E-44FF-858A-93F488151717}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -53,9 +59,20 @@ Global
 		{8D6DE189-E7E8-443F-B371-D4E01DEC7868}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8D6DE189-E7E8-443F-B371-D4E01DEC7868}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8D6DE189-E7E8-443F-B371-D4E01DEC7868}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F85523B-A083-4EE8-B4AB-C6C7199E66FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F85523B-A083-4EE8-B4AB-C6C7199E66FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F85523B-A083-4EE8-B4AB-C6C7199E66FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F85523B-A083-4EE8-B4AB-C6C7199E66FF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{AC94F57A-4A3E-4BC0-BE55-0D06A744687B} = {506A12AE-1957-4A39-A69F-B27E05E721E9}
+		{612FBC72-C9E4-4C7F-B2B5-63ED4E0111FB} = {506A12AE-1957-4A39-A69F-B27E05E721E9}
+		{0121D682-772A-459F-89FE-287A24D9F832} = {506A12AE-1957-4A39-A69F-B27E05E721E9}
+		{8D6DE189-E7E8-443F-B371-D4E01DEC7868} = {506A12AE-1957-4A39-A69F-B27E05E721E9}
+		{6F85523B-A083-4EE8-B4AB-C6C7199E66FF} = {CCA920FF-3E5E-44FF-858A-93F488151717}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5542335A-D57A-470D-AA36-BC91890D4C61}

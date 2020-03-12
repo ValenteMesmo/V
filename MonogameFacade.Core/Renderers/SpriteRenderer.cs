@@ -10,6 +10,9 @@ namespace MonogameFacade
         public Rectangle? Source;
         private Rectangle Target;
 
+        public float Rotation;
+        public Vector2 RotationCenter; 
+
         public Point Offset;
         public Point Size;
 
@@ -28,8 +31,8 @@ namespace MonogameFacade
                 , Target
                 , Source
                 , Color
-                , 0
-                , Vector2.Zero
+                , Rotation
+                , RotationCenter
                 , SpriteEffects.None
                 , 0
             );

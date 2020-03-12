@@ -43,7 +43,7 @@ namespace MonogameFacade
             );
         }
 
-        public Vector2 ToLocalLocation(Vector2 position)
+        public Vector2 GetScreenLocation(Vector2 position)
         {
             return Vector2.Transform(position, Transform);
         }

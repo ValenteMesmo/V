@@ -1,11 +1,28 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Input.Touch;
 using System;
 using System.Collections.Generic;
 
 namespace MonogameFacade
 {
+    public enum BtnState
+    {
+        Released = 0
+        , Releasing = 1
+        , Pressing = 2
+        , Pressed = 3
+    }
+
+    public class MouseInput
+    {
+        public BtnState LeftButton;
+        public Point Position;
+        public Point WorldPosition;
+    }
+
     public abstract class BaseGame : Game
     {
         public Action<long> Vibrate = null;
@@ -16,6 +33,8 @@ namespace MonogameFacade
         public GraphicsDeviceManager graphics = null;
         private SpriteBatch spriteBatch = null;
         private SpriteBatch spriteBatchGui = null;
+
+        public MouseInput MouseInput = null;
 
         public readonly Camera Camera = null;
         public readonly Camera GuiCamera = null;
@@ -30,7 +49,8 @@ namespace MonogameFacade
         {
             Vibrate = f => { };
             this.Camera = new Camera();
-            this.GuiCamera = new Camera() ;
+            this.GuiCamera = new Camera();
+            MouseInput = new MouseInput();
             Camera.Zoom = 0.04f;
             GuiCamera.Zoom = 1f;
 
@@ -73,6 +93,8 @@ namespace MonogameFacade
 
         protected override void Update(GameTime gameTime)
         {
+            UpdateTouchsAndClicks();
+
             for (int i = 0; i < Objects.Count; i++)
             {
                 currentObject = Objects[i];
@@ -118,8 +140,61 @@ namespace MonogameFacade
             //GuiCamera.Update(GraphicsDevice);
         }
 
+        private void UpdateTouchsAndClicks()
+        {
+            Touches.Clear();
+            TouchesUi.Clear();
+
+            var mouse = Mouse.GetState();
+            MouseInput.Position = 
+                GuiCamera.GetWorldPosition(
+                        mouse.Position.ToVector2())
+                    .ToPoint();
+
+            MouseInput.WorldPosition =
+                Camera.GetWorldPosition(
+                        mouse.Position.ToVector2())
+                    .ToPoint();
+
+            if (mouse.LeftButton == ButtonState.Pressed)
+            {
+                if (MouseInput.LeftButton == BtnState.Pressing)
+                    MouseInput.LeftButton = BtnState.Pressed;
+                else if(MouseInput.LeftButton < BtnState.Pressing)
+                    MouseInput.LeftButton = BtnState.Pressing;
+            }
+            else {
+                if (MouseInput.LeftButton > BtnState.Pressing)
+                    MouseInput.LeftButton = BtnState.Releasing;
+                else 
+                    MouseInput.LeftButton = BtnState.Released;
+            }
+
+
+            if (mouse.LeftButton == ButtonState.Pressed)
+            {
+                TouchesUi.Add(
+                    GuiCamera.GetWorldPosition(
+                        mouse.Position.ToVector2())
+                    );
+                Touches.Add(
+                    Camera.GetWorldPosition(
+                        mouse.Position.ToVector2()));
+            }
+
+            var state = TouchPanel.GetState();
+            for (int i = 0; i < state.Count; i++)
+                if (state[i].State > 0)
+                {
+                    TouchesUi.Add(
+                        GuiCamera.GetWorldPosition(state[i].Position));
+                    Touches.Add(
+                        Camera.GetWorldPosition(state[i].Position));
+                }
+        }
+
         protected override void Draw(GameTime gameTime)
-        {            
+        {
             GraphicsDevice.Clear(Color.Black);
 
             spriteBatchGui.Begin(
@@ -143,7 +218,7 @@ namespace MonogameFacade
             );
 
             for (int i = 0; i < Objects.Count; i++)
-                for (var j = 0; j < Objects[i].Renderers.Count; j++)                    
+                for (var j = 0; j < Objects[i].Renderers.Count; j++)
                     Objects[i]
                         .Renderers[j]
                         .Draw(
