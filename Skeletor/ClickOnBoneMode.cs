@@ -1,42 +1,13 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using MonogameFacade;
-using System;
 
 namespace Skeletor
 {
-    public class SpriteLineRenderer : Renderer
+    public class BonePart : GameObject
     {
-        public readonly Texture2D texture = null;
-        private readonly BaseGame game = null;
-        public Vector2 start;
-        public Vector2 end;
-        public Rectangle? source = null;
-
-        public SpriteLineRenderer(Texture2D texture, BaseGame game)
-        {
-            this.texture = texture;
-            this.game = game;
-        }
-
-        public override void Draw(SpriteBatch batchGui, SpriteBatch batch, GameObject Parent)
-        {
-            batch.Draw(
-                texture
-                , start
-                , new Rectangle(
-                    (int)start.X
-                    , (int)start.Y
-                    , (int) Vector2.Distance(start, end)
-                    , 100
-                )
-                , Color.White
-                , (float)Math.Atan2(end.Y - start.Y, end.X - start.X)
-                , Vector2.Zero
-                , 1.0f
-                , SpriteEffects.None
-                , 0
-            );
+        public BonePart(SpriteLineRenderer renderer)
+        {            
+            Renderers.Add(renderer);
         }
     }
 
@@ -47,19 +18,19 @@ namespace Skeletor
         {
             sprite = new SpriteLineRenderer(game.Textures["btn"], game);
             sprite.end = sprite.start = offset.ToVector2();
-            //sprite.Color = Color.Yellow;
-            //begin = sprite.Offset = offset;
-            //sprite.Size = new Point(1000);
             Renderers.Add(sprite);
-
-            //sprite.RotationCenter =  new Vector2(100,100);
-            //sprite.RotationCenter = new Vector2(100, 0);
         }
 
         public override void Update(BaseGame game)
         {
             //var distance = game.MouseInput.WorldPosition - Location;
             sprite.end = game.MouseInput.WorldPosition.ToVector2();
+            if (game.MouseInput.LeftButton == BtnState.Released)
+            {
+                var actualBone = new BonePart(sprite);
+                game.Objects.Add(actualBone);
+                game.Objects.Remove(this);
+            }
             //sprite.Rotation = (float)
             //(
             //    Math.Atan2(
