@@ -14,7 +14,10 @@ namespace Skeletor
             Objects.Add(mode);
             Objects.Add(new ClickOnSpriteMode(mode));
             Objects.Add(new ClickOnBoneMode(mode));
+            Objects.Add(new ClickOnMoveMode(mode, this));
             
+
+
         }
     }
 }

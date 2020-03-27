@@ -15,7 +15,7 @@ namespace MonogameFacade
 
         //DateTime previousUpdate = DateTime.Now;
 
-        public DesktopGame() : base() { }        
+        public DesktopGame() : base() { }
 
         protected override void Initialize()
         {
@@ -27,12 +27,17 @@ namespace MonogameFacade
             InactiveSleepTime = new TimeSpan(0);
             graphics.PreferredBackBufferFormat = SurfaceFormat.HdrBlendable;
             //GameFacade.graphics.GraphicsProfile = GraphicsProfile.HiDef;
+
+
+
             graphics.PreferredBackBufferWidth =
-                1176;
+            1176;
+            //10240;
             //Camera.windowWidth;
             graphics.PreferredBackBufferHeight =
                 664;
-                //Camera.windowHeight;
+            //4320;
+            //Camera.windowHeight;
             graphics.ApplyChanges();
         }
 

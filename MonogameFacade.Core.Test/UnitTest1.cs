@@ -17,6 +17,8 @@ namespace MonogameFacade.Core.Test
         {
             var result = new Dictionary<string, Texture2D> { };
             result.Add("shadedDark04", null);
+            result.Add("btn", null);
+            
             return result;
         }
     }

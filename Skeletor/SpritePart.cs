@@ -3,14 +3,25 @@ using MonogameFacade;
 
 namespace Skeletor
 {
+    //TODO: girar todos os sprites com as setas no move
     public class SpritePart : GameObject
     {
+        private readonly SpriteRenderer sprite;
+
         public SpritePart(BaseGame game)
         {
-            var sprite = new SpriteRenderer();
+            this.sprite = new SpriteRenderer();
             sprite.Texture = game.Textures["btn"];
-            sprite.Size = new Microsoft.Xna.Framework.Point(1000);
+            sprite.Size = new Point(1000);
+            sprite.RotationCenter = new Vector2(
+                sprite.Texture.Width / 2,
+                sprite.Texture.Height / 2);
             Renderers.Add(sprite);
+        }
+
+        public override void Update(BaseGame game)
+        {
+            sprite.Rotation += 0.01f;
         }
     }
 }

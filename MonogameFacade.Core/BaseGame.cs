@@ -8,21 +8,6 @@ using System.Collections.Generic;
 
 namespace MonogameFacade
 {
-    public enum BtnState
-    {
-        Released = 0
-        , Releasing = 1
-        , Pressing = 2
-        , Pressed = 3
-    }
-
-    public class MouseInput
-    {
-        public BtnState LeftButton;
-        public Point Position;
-        public Point WorldPosition;
-    }
-
     public abstract class BaseGame : Game
     {
         public Action<long> Vibrate = null;

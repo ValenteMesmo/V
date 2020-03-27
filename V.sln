@@ -23,6 +23,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Skeletor", "Skeletor\Skelet
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AnimationTool", "AnimationTool", "{CCA920FF-3E5E-44FF-858A-93F488151717}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skeletor.Test", "Skeletor.Test\Skeletor.Test.csproj", "{155AAB8A-EB2F-4E10-B4E8-ED0F89F88BAE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +65,10 @@ Global
 		{6F85523B-A083-4EE8-B4AB-C6C7199E66FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6F85523B-A083-4EE8-B4AB-C6C7199E66FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6F85523B-A083-4EE8-B4AB-C6C7199E66FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{155AAB8A-EB2F-4E10-B4E8-ED0F89F88BAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{155AAB8A-EB2F-4E10-B4E8-ED0F89F88BAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{155AAB8A-EB2F-4E10-B4E8-ED0F89F88BAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{155AAB8A-EB2F-4E10-B4E8-ED0F89F88BAE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -73,6 +79,7 @@ Global
 		{0121D682-772A-459F-89FE-287A24D9F832} = {506A12AE-1957-4A39-A69F-B27E05E721E9}
 		{8D6DE189-E7E8-443F-B371-D4E01DEC7868} = {506A12AE-1957-4A39-A69F-B27E05E721E9}
 		{6F85523B-A083-4EE8-B4AB-C6C7199E66FF} = {CCA920FF-3E5E-44FF-858A-93F488151717}
+		{155AAB8A-EB2F-4E10-B4E8-ED0F89F88BAE} = {CCA920FF-3E5E-44FF-858A-93F488151717}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5542335A-D57A-470D-AA36-BC91890D4C61}
