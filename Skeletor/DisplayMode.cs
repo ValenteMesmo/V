@@ -23,7 +23,7 @@ namespace Skeletor
             if (keyboard.IsKeyDown(Keys.D1))
                 mode = DisplayModeEnum.Sprite;
             if (keyboard.IsKeyDown(Keys.D2))
-                mode = DisplayModeEnum.Bone;
+                mode = DisplayModeEnum.BoneStart;
             if (keyboard.IsKeyDown(Keys.D3))
                 mode = DisplayModeEnum.Move;
             if (keyboard.IsKeyDown(Keys.D4))

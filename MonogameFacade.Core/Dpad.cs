@@ -302,14 +302,14 @@ namespace MonogameFacade
         public Dpad(BaseGame game, InputKeeper input) : base(game, input)
         {
             var sprite2 = new GuiSpriteRenderer();
-            sprite2.Texture = game.Textures["btn"];
+            sprite2.Texture = game.GetTexture("btn");
             sprite2.Size = new Point(Size, Size);
             sprite2.Color = Color.DarkGray;
             //Renderers.Add(sprite2);
 
 
             sprite = new GuiSpriteRenderer();
-            sprite.Texture = game.Textures["shadedDark04"];
+            sprite.Texture = game.GetTexture("shadedDark04");
             sprite.Size = new Point(Size, Size);
             Location.X = -600;
             Location.Y = -320;
@@ -342,31 +342,31 @@ namespace MonogameFacade
             Location.Y = -320;
 
             var sprite = new GuiSpriteRenderer();
-            sprite.Texture = game.Textures["btn"];
+            sprite.Texture = game.GetTexture("btn");
             sprite.Size = new Point(Size, Size);
             sprite.Color = Color.DarkGray;
             //Renderers.Add(sprite);
 
             var sprite1 = new GuiSpriteRenderer();
-            sprite1.Texture = game.Textures["shadedDark39"];
+            sprite1.Texture = game.GetTexture("shadedDark39");
             sprite1.Offset = new Point(45, -10);
             sprite1.Size = new Point(buttonSize, buttonSize);
             Renderers.Add(sprite1);
 
             var sprite2 = new GuiSpriteRenderer();
-            sprite2.Texture = game.Textures["shadedDark37"];
+            sprite2.Texture = game.GetTexture("shadedDark37");
             sprite2.Offset = new Point(100, 45);
             sprite2.Size = new Point(buttonSize, buttonSize);
             Renderers.Add(sprite2);
 
             var sprite3 = new GuiSpriteRenderer();
-            sprite3.Texture = game.Textures["shadedDark36"];
+            sprite3.Texture = game.GetTexture("shadedDark36");
             sprite3.Offset = new Point(45, 100);
             sprite3.Size = new Point(buttonSize, buttonSize);
             Renderers.Add(sprite3);
 
             var sprite4 = new GuiSpriteRenderer();
-            sprite4.Texture = game.Textures["shadedDark38"];
+            sprite4.Texture = game.GetTexture("shadedDark38");
             sprite4.Offset = new Point(-10, 45);
             sprite4.Size = new Point(buttonSize, buttonSize);
             Renderers.Add(sprite4);

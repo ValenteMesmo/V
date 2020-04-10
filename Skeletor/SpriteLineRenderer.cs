@@ -8,18 +8,20 @@ namespace Skeletor
     public class SpriteLineRenderer : Renderer
     {
         public readonly Texture2D texture = null;
-        private readonly BaseGame game = null;
         public Vector2 start;
         public Vector2 end;
         public Rectangle? source = null;
 
-        public SpriteLineRenderer(Texture2D texture, BaseGame game)
+        public SpriteLineRenderer(Texture2D texture)
         {
             this.texture = texture;
-            this.game = game;
         }
 
-        public override void Draw(SpriteBatch batchGui, SpriteBatch batch, GameObject Parent)
+        public override void Draw(
+            SpriteBatch batchGui
+            , SpriteBatch batch
+            , GameObject Parent
+        )
         {
             batch.Draw(
                 texture

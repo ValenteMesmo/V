@@ -9,7 +9,7 @@ namespace MonogameFacade
         public Block(BaseGame game)
         {
             var sprite = new SpriteRenderer();
-            sprite.Texture = game.Textures["btn"];
+            sprite.Texture = game.GetTexture("btn");
             sprite.Size = new Point(Size, Size);
             Renderers.Add(sprite);
 

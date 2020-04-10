@@ -10,14 +10,13 @@ namespace Skeletor
             base.LoadContent();
 
             var mode = new DisplayMode(this);
-            //Objects.Add(new AddSpriteButton(this));
+            var skeleton = new SkeletonAnimationParts();
+            var boneHandler = new ClickHandlerForBoneEndMode(mode, skeleton);
             Objects.Add(mode);
-            Objects.Add(new ClickOnSpriteMode(mode));
-            Objects.Add(new ClickOnBoneMode(mode));
-            Objects.Add(new ClickOnMoveMode(mode, this));
-            
-
-
+            Objects.Add(new ClickHandlerForpriteMode(mode));
+            Objects.Add(new ClickHandlerForBoneStartMode(mode, boneHandler, skeleton));
+            Objects.Add(boneHandler);
+            Objects.Add(new ClickHnadlerForMoveMode(mode, this));
         }
     }
 }

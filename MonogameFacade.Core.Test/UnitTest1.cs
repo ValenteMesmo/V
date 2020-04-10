@@ -1,83 +1,66 @@
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Graphics;
-using System.Collections.Generic;
-using Xunit;
+//using Microsoft.Xna.Framework;
+//using Microsoft.Xna.Framework.Content;
+//using Microsoft.Xna.Framework.Graphics;
+//using System.Collections.Generic;
+//using Xunit;
 
-namespace MonogameFacade.Core.Test
-{
-    public class TestGame : BaseGame
-    {
-        public TestGame()
-        {
-            Textures = LoadTextures(null);
-        }
+//namespace MonogameFacade.Core.Test
+//{
+//    public class DpadTests
+//    {
+//        [Fact]
+//        public void LeftFromNone()
+//        {
+//            var game = new TestGame();
+//            var sut = new Dpad(game, new Systems.InputKeeper());
 
-        protected override Dictionary<string, Texture2D> LoadTextures(ContentManager Content)
-        {
-            var result = new Dictionary<string, Texture2D> { };
-            result.Add("shadedDark04", null);
-            result.Add("btn", null);
-            
-            return result;
-        }
-    }
+//            var touch = (sut.touchArea.Center + new Point(Dpad.minDistance + 1, 0))
+//                .ToVector2();
 
-    public class DpadTests
-    {
-        [Fact]
-        public void LeftFromNone()
-        {
-            var game = new TestGame();
-            var sut = new Dpad(game, new Systems.InputKeeper());
+//            game.TouchesUi.Add(touch);
 
-            var touch = (sut.touchArea.Center + new Point(Dpad.minDistance + 1, 0))
-                .ToVector2();
+//            Assert.Equal(DpadDirection.None, sut.CurrentDirection);
+//            sut.Update(game);
 
-            game.TouchesUi.Add(touch);
+//            Assert.Equal(DpadDirection.Right, sut.CurrentDirection);
+//        }
 
-            Assert.Equal(DpadDirection.None, sut.CurrentDirection);
-            sut.Update(game);
+//        [Fact]
+//        public void RightFromRight()
+//        {
+//            var game = new TestGame();
+//            var sut = new Dpad(game, new Systems.InputKeeper());
 
-            Assert.Equal(DpadDirection.Right, sut.CurrentDirection);
-        }
+//            var touch = (sut.touchArea.Center + new Point(Dpad.minDistance + 1, 0))
+//                .ToVector2();
 
-        [Fact]
-        public void RightFromRight()
-        {
-            var game = new TestGame();
-            var sut = new Dpad(game, new Systems.InputKeeper());
+//            game.TouchesUi.Add(touch);
 
-            var touch = (sut.touchArea.Center + new Point(Dpad.minDistance + 1, 0))
-                .ToVector2();
+//            Assert.Equal(DpadDirection.None, sut.CurrentDirection);
+//            sut.Update(game);
+//            sut.Update(game);
+//            sut.Update(game);
 
-            game.TouchesUi.Add(touch);
+//            Assert.Equal(DpadDirection.Right, sut.CurrentDirection);
+//        }
 
-            Assert.Equal(DpadDirection.None, sut.CurrentDirection);
-            sut.Update(game);
-            sut.Update(game);
-            sut.Update(game);
+//        [Fact]
+//        public void NoneFromRight()
+//        {
+//            var game = new TestGame();
+//            var sut = new Dpad(game, new Systems.InputKeeper());
 
-            Assert.Equal(DpadDirection.Right, sut.CurrentDirection);
-        }
+//            var touch = (sut.touchArea.Center + new Point(Dpad.minDistance + 1, 0))
+//                .ToVector2();
 
-        [Fact]
-        public void NoneFromRight()
-        {
-            var game = new TestGame();
-            var sut = new Dpad(game, new Systems.InputKeeper());
+//            game.TouchesUi.Add(touch);
 
-            var touch = (sut.touchArea.Center + new Point(Dpad.minDistance + 1, 0))
-                .ToVector2();
+//            Assert.Equal(DpadDirection.None, sut.CurrentDirection);
+//            sut.Update(game);
+//            game.TouchesUi.Clear();
+//            sut.Update(game);
 
-            game.TouchesUi.Add(touch);
-
-            Assert.Equal(DpadDirection.None, sut.CurrentDirection);
-            sut.Update(game);
-            game.TouchesUi.Clear();
-            sut.Update(game);
-
-            Assert.Equal(DpadDirection.None, sut.CurrentDirection);
-        }
-    }
-}
+//            Assert.Equal(DpadDirection.None, sut.CurrentDirection);
+//        }
+//    }
+//}

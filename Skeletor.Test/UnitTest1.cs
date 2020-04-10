@@ -1,38 +1,57 @@
 using AutoFixture.Xunit2;
+using Microsoft.Xna.Framework;
+using MonogameFacade;
 using System;
 using Xunit;
 
 namespace Skeletor.Test
 {
+    using SutAttribute = NoAutoPropertiesAttribute;
+
     public class BonesHierarchyTest
     {
         [Theory, AutoNSubstituteData]
-        public void NavigateToBone([NoAutoProperties]BonesHierarchy sut)
+        public void AddNewBone(
+            [Sut]SkeletonAnimationParts sut
+            , Vector2 from
+            , Vector2 to
+            , BaseGame game)
         {
-            sut.AddNewBone();
-            sut.NavigateToBone(0);
-        }
-
-
-        [Theory, AutoNSubstituteData]
-        public void AddNewBone([NoAutoProperties]BonesHierarchy sut)
-        {
-            Assert.Null(sut.Bone);
-            sut.AddNewBone();
-            Assert.NotNull(sut.Bone);
+            Assert.Null(sut.CurrentBone);
+            sut.AddNewBone(from, to, game);
+            Assert.NotNull(sut.CurrentBone);
         }
 
         [Theory, AutoNSubstituteData]
-        public void AddNewSpriteWithoutAnyBones([NoAutoProperties]BonesHierarchy sut)
+        public void AddNewSpriteWithoutAnyBones(
+            [Sut]SkeletonAnimationParts sut
+            , Vector2 location)
         {
-            sut.AddNewSprite();
-            Assert.Null(sut.Bone);
+            sut.AddNewSprite(location);
+            Assert.Null(sut.CurrentBone);
         }
 
         [Theory, AutoNSubstituteData]
-        public void AddNewSprite([NoAutoProperties]BonesHierarchy sut)
+        public void AddNewSprite(
+            [Sut]SkeletonAnimationParts sut
+            , Vector2 from
+            , Vector2 to
+            , Vector2 spriteLocation
+            , BaseGame game)
         {
-            sut.AddNewSprite();
+            sut.AddNewBone(from, to, game);
+            sut.AddNewSprite(spriteLocation);
+        }
+
+        [Theory, AutoNSubstituteData]
+        public void NavigateToBone(
+            [Sut]SkeletonAnimationParts sut
+            , Vector2 from
+            , Vector2 to
+            , BaseGame game)
+        {
+            sut.AddNewBone(from, to, game);
+            sut.GoToChildren(0);
         }
     }
 }

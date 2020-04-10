@@ -28,7 +28,11 @@ namespace MonogameFacade
         public FrameCounter FrameCounter = null;
         public List<GameObject> Objects = null;
 
-        public Dictionary<string, Texture2D> Textures = null;
+        private Dictionary<string, Texture2D> Textures = null;
+        public Texture2D GetTexture(string name)
+        {
+            return this.Textures[name];
+        }
 
         public BaseGame()
         {
@@ -131,7 +135,7 @@ namespace MonogameFacade
             TouchesUi.Clear();
 
             var mouse = Mouse.GetState();
-            MouseInput.Position = 
+            MouseInput.Position =
                 GuiCamera.GetWorldPosition(
                         mouse.Position.ToVector2())
                     .ToPoint();
@@ -145,13 +149,14 @@ namespace MonogameFacade
             {
                 if (MouseInput.LeftButton == BtnState.Pressing)
                     MouseInput.LeftButton = BtnState.Pressed;
-                else if(MouseInput.LeftButton < BtnState.Pressing)
+                else if (MouseInput.LeftButton < BtnState.Pressing)
                     MouseInput.LeftButton = BtnState.Pressing;
             }
-            else {
+            else
+            {
                 if (MouseInput.LeftButton > BtnState.Pressing)
                     MouseInput.LeftButton = BtnState.Releasing;
-                else 
+                else
                     MouseInput.LeftButton = BtnState.Released;
             }
 

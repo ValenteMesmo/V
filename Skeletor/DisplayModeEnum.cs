@@ -3,7 +3,8 @@
     public enum DisplayModeEnum
     {
         Sprite,
-        Bone,
+        BoneStart,
+        BoneEnd,
         Move,
         Erase
     }

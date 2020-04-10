@@ -3,11 +3,11 @@
 namespace Skeletor
 {
 
-    public class ClickOnSpriteMode : GameObject
+    public class ClickHandlerForpriteMode : GameObject
     {
         private readonly DisplayMode mode = null;
 
-        public ClickOnSpriteMode(DisplayMode mode)
+        public ClickHandlerForpriteMode(DisplayMode mode)
         {
             this.mode = mode;
         }

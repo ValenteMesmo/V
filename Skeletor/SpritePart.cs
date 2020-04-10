@@ -11,7 +11,7 @@ namespace Skeletor
         public SpritePart(BaseGame game)
         {
             this.sprite = new SpriteRenderer();
-            sprite.Texture = game.Textures["btn"];
+            sprite.Texture = game.GetTexture("btn");
             sprite.Size = new Point(1000);
             sprite.RotationCenter = new Vector2(
                 sprite.Texture.Width / 2,
