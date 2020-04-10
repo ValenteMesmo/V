@@ -13,7 +13,7 @@ namespace Skeletor
             var skeleton = new SkeletonAnimationParts();
             var boneHandler = new ClickHandlerForBoneEndMode(mode, skeleton);
             Objects.Add(mode);
-            Objects.Add(new ClickHandlerForpriteMode(mode));
+            Objects.Add(new ClickHandlerForSpriteMode(mode, skeleton));
             Objects.Add(new ClickHandlerForBoneStartMode(mode, boneHandler, skeleton));
             Objects.Add(boneHandler);
             Objects.Add(new ClickHnadlerForMoveMode(mode, this));

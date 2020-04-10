@@ -18,13 +18,13 @@ namespace Skeletor
         //talvez nao precise disso....        
         public Bone ParentBone = null;
         public readonly List<Bone> Children = null;
-        public readonly List<string> GluedSprites = null;
+        public readonly List<SpritePart> GluedSprites = null;
         public readonly SpriteLineRenderer BoneSprite;
 
         public Bone(Vector2 Start, Vector2 End, Texture2D texture)
         {         
             Children = new List<Bone>();
-            GluedSprites = new List<string>();
+            GluedSprites = new List<SpritePart>();
             BoneSprite = new SpriteLineRenderer(texture);
             BoneSprite.start = Start;
             BoneSprite.end = End;
@@ -36,10 +36,11 @@ namespace Skeletor
     {
         public Bone CurrentBone = null;
 
-        public Bone AddNewBone(Vector2 start, Vector2 end, BaseGame game)
+        public Bone AddNewBone(
+            Vector2 start
+            , Vector2 end
+            , BaseGame game)
         {
-                //e agora? os bones vao ficar na coordenada zero do mundo?
-                
             var newBone = new Bone(start, end, game.GetTexture("btn"));
 
             if (CurrentBone == null)
@@ -55,9 +56,16 @@ namespace Skeletor
             return newBone;
         }
 
-        public void AddNewSprite(Vector2 location)
+        public void AddNewSprite(
+            Point location
+            , BaseGame game)
         {
-            
+            if (CurrentBone == null)
+                return;
+            var newSprite = new SpritePart(game);
+            newSprite.Location = location;
+            CurrentBone.GluedSprites.Add(newSprite);
+            game.Objects.Add(newSprite);
         }
 
         public void GoToChildren(int index)
