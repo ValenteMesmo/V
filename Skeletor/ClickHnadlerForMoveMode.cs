@@ -6,13 +6,7 @@ using System.Collections.Generic;
 
 namespace Skeletor
 {
-    //TODO: "filemanager"
-    //1- rectangle list
-    //2- reorder with drag and drop
-    //3- set as child with drag and drop
-    //4- unset as child with drag and drop to "..."
-    //5- think! how to rotate children with parent bone
-
+    //TODO: change from bone animation to thumbtack animation?
     public class Bone : GameObject
     {
         //talvez nao precise disso....        
@@ -22,13 +16,18 @@ namespace Skeletor
         public readonly SpriteLineRenderer BoneSprite;
 
         public Bone(Vector2 Start, Vector2 End, Texture2D texture)
-        {         
+        {
             Children = new List<Bone>();
             GluedSprites = new List<SpritePart>();
             BoneSprite = new SpriteLineRenderer(texture);
             BoneSprite.start = Start;
             BoneSprite.end = End;
             Renderers.Add(BoneSprite);
+        }
+
+        public void Rotate()
+        {
+            //BoneSprite.
         }
     }
 
@@ -74,7 +73,8 @@ namespace Skeletor
 
         public void Rotate()
         {
-            //CurrentBone.Rotate();
+            if (CurrentBone != null)
+                CurrentBone.Rotate();
         }
 
         public void GoToParent()
@@ -85,28 +85,23 @@ namespace Skeletor
     public class ClickHnadlerForMoveMode : GameObject
     {
         private readonly DisplayMode mode = null;
-        private readonly SpriteRenderer sprite;
+        private readonly SkeletonAnimationParts skeleton;
 
-        public ClickHnadlerForMoveMode(DisplayMode mode, BaseGame game)
+        public ClickHnadlerForMoveMode(
+            DisplayMode mode
+            , BaseGame game
+            , SkeletonAnimationParts skeleton)
         {
             this.mode = mode;
-            sprite = new SpriteRenderer();
-            sprite.Texture = game.GetTexture("btn");
-            sprite.Size = new Microsoft.Xna.Framework.Point(1000);
-            sprite.Offset = new Microsoft.Xna.Framework.Point(200);
+            this.skeleton = skeleton;
         }
 
         public override void Update(BaseGame game)
         {
-            Renderers.Clear();
-
             if (mode.mode != DisplayModeEnum.Move)
-            {
                 return;
-            }
 
-            Renderers.Add(sprite);
-
+            skeleton.Rotate();
         }
     }
 }

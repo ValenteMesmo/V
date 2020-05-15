@@ -20,7 +20,7 @@ namespace V
             sprite = new SpriteRenderer
             {
                 Color = Color.Cyan,
-                Texture = game.GetTexture("btn"],
+                Texture = game.GetTexture("btn"),
                 Size = new Point(1000, 1000)
             };
             Renderers.Add(sprite);

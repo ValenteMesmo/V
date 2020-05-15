@@ -21,7 +21,7 @@ namespace MonogameFacade
         public Matrix GetTransformation(GraphicsDevice graphicsDevice)
         {
             Transform =
-              Matrix.CreateTranslation(-Location.X, -Location.Y, 0)
+                Matrix.CreateTranslation(-Location.X, -Location.Y, 0)
                 * Matrix.CreateRotationZ(Rotation)
                 * Matrix.CreateScale(
                     Zoom * (graphicsDevice.Viewport.Width / VIRTUAL_WIDTH)

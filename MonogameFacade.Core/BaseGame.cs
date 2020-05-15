@@ -40,7 +40,7 @@ namespace MonogameFacade
             this.Camera = new Camera();
             this.GuiCamera = new Camera();
             MouseInput = new MouseInput();
-            Camera.Zoom = 0.04f;
+            Camera.Zoom = 1f;
             GuiCamera.Zoom = 1f;
 
             Objects = new List<GameObject>();

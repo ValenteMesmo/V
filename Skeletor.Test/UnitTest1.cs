@@ -27,7 +27,7 @@ namespace Skeletor.Test
             [Sut]SkeletonAnimationParts sut
             , Vector2 location)
         {
-            sut.AddNewSprite(location);
+            //sut.AddNewSprite(location);
             Assert.Null(sut.CurrentBone);
         }
 
@@ -40,7 +40,7 @@ namespace Skeletor.Test
             , BaseGame game)
         {
             sut.AddNewBone(from, to, game);
-            sut.AddNewSprite(spriteLocation);
+            //sut.AddNewSprite(spriteLocation);
         }
 
         [Theory, AutoNSubstituteData]

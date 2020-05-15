@@ -21,7 +21,7 @@ namespace Skeletor
 
         public override void Update(BaseGame game)
         {
-            sprite.Rotation += 0.01f;
+            //sprite.Rotation += 0.01f;
         }
     }
 }
