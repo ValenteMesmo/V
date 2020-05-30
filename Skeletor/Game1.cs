@@ -36,20 +36,22 @@ namespace Skeletor
         {
             base.LoadContent();
 
-            //var texture = this.GetTexture("block");
+            //var texture = this.GetTexture("block");w
 
             //Objects.Add(new SpriteRotationTest(texture)
             //{
             //    Location = new Microsoft.Xna.Framework.Point(100, 100)
             //});
             var mode = new DisplayMode(this);
-            var skeleton = new SkeletonAnimationParts();
-            var boneHandler = new ClickHandlerForBoneEndMode(mode, skeleton);
+            //var skeleton = new SkeletonAnimationParts();
+            //var boneHandler = new ClickHandlerForBoneEndMode(mode, skeleton);
             Objects.Add(mode);
-            Objects.Add(new ClickHandlerForSpriteMode(mode, skeleton));
-            Objects.Add(new ClickHandlerForBoneStartMode(mode, boneHandler, skeleton));
-            Objects.Add(boneHandler);
-            Objects.Add(new ClickHnadlerForMoveMode(mode, this, skeleton));
+            var animsaidasd = new animsadasd();
+            Objects.Add(animsaidasd);
+            Objects.Add(new ClickHandlerForSpriteMode(mode, animsaidasd, this.GetTexture("btn")));
+            //Objects.Add(new ClickHandlerForBoneStartMode(mode, boneHandler, skeleton));
+            //Objects.Add(boneHandler);
+            Objects.Add(new ClickHnadlerForMoveMode(mode, this));
         }
     }
 }
