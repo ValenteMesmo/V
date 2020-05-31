@@ -2,16 +2,42 @@
 using Microsoft.Xna.Framework.Graphics;
 using MonogameFacade;
 using System;
+using System.Collections.Generic;
+using System.Net.Http.Headers;
 
 namespace Skeletor
 {
+    public class ListOfSpritesOnScreen : GameObject
+    {
+        public List<TextRenderer> texts = null;
+
+        public ListOfSpritesOnScreen(SpriteFont font)
+        {
+            Location = new Point(-600,-350);
+            texts = new List<TextRenderer>();
+            texts.AddRange(
+                new TextRenderer[]{
+                    new TextRenderer(){ Text = "1" ,Font=font , Location = new Point(0,0)}
+                    ,new TextRenderer(){ Text = "2",Font=font , Location = new Point(0,150)}
+                    ,new TextRenderer(){ Text = "3",Font=font , Location = new Point(0,300)}
+                }
+            );
+
+            Renderers.AddRange(texts);
+        }
+
+        public override void Update(BaseGame game)
+        {
+
+        }
+    }
+
+
     public class animsadasd : GameObject
     {
         private Sprite Sprite;
 
         public Vector2 ParentLocation;
-
-    
 
         internal void AddSprite(Sprite sprite)
         {
@@ -57,7 +83,7 @@ namespace Skeletor
                 return;
 
             Renderers.Add(preview);
-            preview.Location = game.MouseInput.WorldPosition.ToVector2() 
+            preview.Location = game.MouseInput.WorldPosition.ToVector2()
                 //+ Animation.ParentLocation
                 ;
             if (game.MouseInput.LeftButton == BtnState.Pressing)

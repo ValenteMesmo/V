@@ -48,10 +48,12 @@ namespace Skeletor
             Objects.Add(mode);
             var animsaidasd = new animsadasd();
             Objects.Add(animsaidasd);
-            Objects.Add(new ClickHandlerForSpriteMode(mode, animsaidasd, this.GetTexture("btn")));
+            Objects.Add(new ClickHandlerForSpriteMode(mode, animsaidasd, GetTexture("btn")));
             //Objects.Add(new ClickHandlerForBoneStartMode(mode, boneHandler, skeleton));
             //Objects.Add(boneHandler);
             Objects.Add(new ClickHnadlerForMoveMode(mode, this));
+
+            Objects.Add(new ListOfSpritesOnScreen(Font));
         }
     }
 }
