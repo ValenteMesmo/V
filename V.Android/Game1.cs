@@ -1,5 +1,4 @@
 ﻿using Android.Content.Res;
-using Microsoft.Xna.Framework;
 using MonogameFacade;
 
 namespace V.Android

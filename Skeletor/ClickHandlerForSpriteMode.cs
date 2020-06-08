@@ -7,13 +7,28 @@ using System.Net.Http.Headers;
 
 namespace Skeletor
 {
+    public class GuiLabel : GameObject
+    {
+        private TextRenderer TextRenderer = null;
+
+        public GuiLabel()
+        {
+            TextRenderer = new TextRenderer();
+        }
+
+        public void SetText(string text)
+        {
+            TextRenderer.Text = text;
+        }
+    }
+
     public class ListOfSpritesOnScreen : GameObject
     {
         public List<TextRenderer> texts = null;
 
         public ListOfSpritesOnScreen(SpriteFont font)
         {
-            Location = new Point(-600,-350);
+            Location = new Point(-600, -350);
             texts = new List<TextRenderer>();
             texts.AddRange(
                 new TextRenderer[]{
@@ -23,21 +38,28 @@ namespace Skeletor
                 }
             );
 
-            Renderers.AddRange(texts);
+
         }
 
         public override void Update(BaseGame game)
         {
-
+            Renderers.Clear();
+            Renderers.AddRange(texts);
         }
     }
 
 
     public class animsadasd : GameObject
     {
-        private Sprite Sprite;
+        private Sprite Sprite = null;
 
         public Vector2 ParentLocation;
+        //private ListOfSpritesOnScreen displayMenu = null;
+
+        //public animsadasd(ListOfSpritesOnScreen displayMenu)
+        //{
+        //    this.displayMenu = displayMenu;
+        //}
 
         internal void AddSprite(Sprite sprite)
         {

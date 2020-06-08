@@ -3,37 +3,37 @@ using MonogameFacade;
 
 namespace Skeletor
 {
-    public class SpriteRotationTest : GameObject
-    {
-        private Sprite main;
-        private Sprite sub;
+    //public class SpriteRotationTest : GameObject
+    //{
+    //    private Sprite main;
+    //    private Sprite sub;
 
-        public SpriteRotationTest(Texture2D texture)
-        {
-            this. main = new Sprite(texture)
-            {
-                Scale = new Microsoft.Xna.Framework.Vector2(2, 2)
+    //    public SpriteRotationTest(Texture2D texture)
+    //    {
+    //        this. main = new Sprite(texture)
+    //        {
+    //            Scale = new Microsoft.Xna.Framework.Vector2(2, 2)
                 
-            };
-            this.sub = new Sprite(texture)
-            {
-                Scale = new Microsoft.Xna.Framework.Vector2(1, 1)
-            };
+    //        };
+    //        this.sub = new Sprite(texture)
+    //        {
+    //            Scale = new Microsoft.Xna.Framework.Vector2(1, 1)
+    //        };
 
-            main.Children.Add(sub);
-            Renderers.Add(main);
-        }
+    //        main.Children.Add(sub);
+    //        Renderers.Add(main);
+    //    }
 
-        public override void Update(BaseGame game)
-        {
-            sub.Rotation += 0.01f;
-            main.Rotation += 0.01f;
-        }
-    }
+    //    public override void Update(BaseGame game)
+    //    {
+    //        sub.Rotation += 0.01f;
+    //        main.Rotation += 0.01f;
+    //    }
+    //}
     public class Game1 : DesktopGame
-    {
+    {        
         protected override void LoadContent()
-        {
+        {            
             base.LoadContent();
 
             //var texture = this.GetTexture("block");w

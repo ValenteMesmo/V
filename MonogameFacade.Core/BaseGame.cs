@@ -10,6 +10,8 @@ namespace MonogameFacade
 {
     public abstract class BaseGame : Game
     {
+        public static BaseGame Instance = null;
+
         public Action<long> Vibrate = null;
         public List<Vector2> Touches = null;
         public List<Vector2> TouchesUi = null;
@@ -36,6 +38,7 @@ namespace MonogameFacade
 
         public BaseGame()
         {
+            Instance = this;
             Vibrate = f => { };
             this.Camera = new Camera();
             this.GuiCamera = new Camera();

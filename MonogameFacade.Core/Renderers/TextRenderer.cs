@@ -44,6 +44,7 @@ namespace MonogameFacade
         {
             Color = Color.Red;
             scale = 10;
+            Font = BaseGame.Instance.Font;
         }
 
         public override void Draw(SpriteBatch batchGui, SpriteBatch batch, GameObject Parent)
