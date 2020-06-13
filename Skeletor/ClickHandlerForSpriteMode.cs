@@ -1,58 +1,13 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonogameFacade;
-using System;
-using System.Collections.Generic;
-using System.Net.Http.Headers;
 
 namespace Skeletor
 {
-    public class GuiLabel : GameObject
-    {
-        private TextRenderer TextRenderer = null;
-
-        public GuiLabel()
-        {
-            TextRenderer = new TextRenderer();
-        }
-
-        public void SetText(string text)
-        {
-            TextRenderer.Text = text;
-        }
-    }
-
-    public class ListOfSpritesOnScreen : GameObject
-    {
-        public List<TextRenderer> texts = null;
-
-        public ListOfSpritesOnScreen(SpriteFont font)
-        {
-            Location = new Point(-600, -350);
-            texts = new List<TextRenderer>();
-            texts.AddRange(
-                new TextRenderer[]{
-                    new TextRenderer(){ Text = "1" ,Font=font , Location = new Point(0,0)}
-                    ,new TextRenderer(){ Text = "2",Font=font , Location = new Point(0,150)}
-                    ,new TextRenderer(){ Text = "3",Font=font , Location = new Point(0,300)}
-                }
-            );
-
-
-        }
-
-        public override void Update(BaseGame game)
-        {
-            Renderers.Clear();
-            Renderers.AddRange(texts);
-        }
-    }
-
-
     public class animsadasd : GameObject
     {
-        private Sprite Sprite = null;
-
+        public SpriteOnDrawMode Sprite = null;
+        public SharedProperty<int> CurrentDepth = null;
         public Vector2 ParentLocation;
         //private ListOfSpritesOnScreen displayMenu = null;
 
@@ -61,7 +16,12 @@ namespace Skeletor
         //    this.displayMenu = displayMenu;
         //}
 
-        internal void AddSprite(Sprite sprite)
+
+        public animsadasd()
+        {
+            CurrentDepth = new SharedProperty<int>();
+        }
+        internal void AddSprite(SpriteOnDrawMode sprite)
         {
             if (Sprite == null)
             {
@@ -71,6 +31,7 @@ namespace Skeletor
             }
             else
             {
+                CurrentDepth.Value = sprite.OwnDepth = Sprite.OwnDepth + 1;
                 sprite.Location = Vector2.Transform(
                     sprite.Location
                     , Matrix.Invert(Sprite.LocalTransform)
@@ -110,7 +71,7 @@ namespace Skeletor
                 ;
             if (game.MouseInput.LeftButton == BtnState.Pressing)
             {
-                var sprite = new Sprite(game.GetTexture("btn"));
+                var sprite = new SpriteOnDrawMode(game.GetTexture("btn"), Animation.CurrentDepth);
                 sprite.Location = preview.Location;
                 Animation.AddSprite(sprite);
             }

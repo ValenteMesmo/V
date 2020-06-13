@@ -53,7 +53,7 @@ namespace Skeletor
             //Objects.Add(boneHandler);
             Objects.Add(new ClickHnadlerForMoveMode(mode, this));
 
-            Objects.Add(new ListOfSpritesOnScreen(Font));
+            Objects.Add(new ListOfSpritesOnScreen(animsaidasd));
         }
     }
 }

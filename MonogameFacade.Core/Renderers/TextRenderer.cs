@@ -38,7 +38,7 @@ namespace MonogameFacade
         public string Text;
         public float scale;
         public Color Color;
-        public Point Location;
+        public Point Offset;
 
         public TextRenderer()
         {
@@ -52,7 +52,7 @@ namespace MonogameFacade
             batch.DrawString(
                 Font
                 , Text
-                , (Parent.Location + Location).ToVector2()
+                , (Parent.Location + Offset).ToVector2()
                 , Color
                 , 0
                 , Vector2.Zero
