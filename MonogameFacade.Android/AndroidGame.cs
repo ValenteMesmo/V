@@ -8,7 +8,7 @@ using System.IO;
 
 namespace MonogameFacade
 {
-    public abstract class AndroidGame : BaseGame
+    public abstract class AndroidGame : Game
     {
         private readonly AssetManager assets = null;
 

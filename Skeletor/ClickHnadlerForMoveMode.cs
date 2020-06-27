@@ -12,12 +12,12 @@ namespace Skeletor
 
         public ClickHnadlerForMoveMode(
             DisplayMode mode
-            , BaseGame game)
+            , MonogameFacade.Game game)
         {
             this.mode = mode;
         }
 
-        public override void Update(BaseGame game)
+        public override void Update(MonogameFacade.Game game)
         {
             if (mode.mode != DisplayModeEnum.Move)
                 return;

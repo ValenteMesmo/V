@@ -5,13 +5,15 @@ namespace MonogameFacade
 {
     public class GuiTextRenderer : Renderer
     {
-        public SpriteFont Font;
+        private SpriteFont Font;
         public string Text;
         public float scale;
         public Color Color;
 
-        public GuiTextRenderer()
+        public override void Begin()
         {
+            base.Begin();
+            Font = Game.Instance.Font;
             Color = Color.Red;
             scale = 10;
         }
@@ -30,21 +32,28 @@ namespace MonogameFacade
                 , 0
             );
         }
+
+        public override void End()
+        {
+            Color = Color.Red;
+            scale = 10;
+        }
     }
 
     public class TextRenderer : Renderer
     {
-        public SpriteFont Font;
+        private SpriteFont Font;
         public string Text;
         public float scale;
         public Color Color;
         public Point Offset;
 
-        public TextRenderer()
+        public override void Begin()
         {
+            base.Begin();
             Color = Color.Red;
             scale = 10;
-            Font = BaseGame.Instance.Font;
+            Font = Game.Instance.Font;
         }
 
         public override void Draw(SpriteBatch batchGui, SpriteBatch batch, GameObject Parent)
@@ -60,6 +69,13 @@ namespace MonogameFacade
                 , SpriteEffects.None
                 , 0
             );
+        }
+
+        public override void End()
+        {
+            Color = Color.Red;
+            scale = 10;
+            Offset = Point.Zero;
         }
     }
 }

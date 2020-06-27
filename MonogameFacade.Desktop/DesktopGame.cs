@@ -8,7 +8,7 @@ using System.IO;
 
 namespace MonogameFacade
 {
-    public abstract class DesktopGame : BaseGame
+    public abstract class DesktopGame : Game
     {
         const double dt = 0.0166;
         double accumulator;

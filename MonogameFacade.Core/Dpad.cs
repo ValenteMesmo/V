@@ -23,7 +23,7 @@ namespace MonogameFacade
         public Vector2 previousTouch;
         protected Color Color;
 
-        public BaseFourTouchanleButtons(BaseGame game, InputKeeper input)
+        public BaseFourTouchanleButtons(Game game, InputKeeper input)
         {
             this.input = input;
             touchArea = new Rectangle(Location, new Point(Size, Size));
@@ -35,7 +35,7 @@ namespace MonogameFacade
                 , Size + extraSize);
         }
 
-        public override void Update(BaseGame game)
+        public override void Update(Game game)
         {
             var newDirection = CalculateDpadDirection(game);
             PreviousDirection = CurrentDirection;
@@ -84,7 +84,7 @@ namespace MonogameFacade
         private const int TouchVibration = 1;
         private const int UntouchVibration = 1;
 
-        private DpadDirection CalculateDpadDirection(BaseGame game)
+        private DpadDirection CalculateDpadDirection(Game game)
         {
             for (int i = 0; i < game.TouchesUi.Count; i++)
                 if (touchArea.Contains(game.TouchesUi[i]))
@@ -299,7 +299,7 @@ namespace MonogameFacade
     {
         public GuiSpriteRenderer sprite = null;
 
-        public Dpad(BaseGame game, InputKeeper input) : base(game, input)
+        public Dpad(Game game, InputKeeper input) : base(game, input)
         {
             var sprite2 = new GuiSpriteRenderer();
             sprite2.Texture = game.GetTexture("btn");
@@ -336,7 +336,7 @@ namespace MonogameFacade
     {
         const int buttonSize = 70;
 
-        public ActionButtons(BaseGame game, InputKeeper input) : base(game, input)
+        public ActionButtons(Game game, InputKeeper input) : base(game, input)
         {
             Location.X = 430;
             Location.Y = -320;

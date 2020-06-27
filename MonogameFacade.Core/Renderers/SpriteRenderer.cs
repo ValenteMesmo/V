@@ -7,18 +7,24 @@ namespace MonogameFacade
     {
         public Texture2D Texture;
         public Color Color;
+        public Point Size;
+        public Point Offset;
         public Rectangle? Source;
+        public Vector2 RotationCenter; 
+        public float Rotation;
+
         private Rectangle Target;
 
-        public float Rotation;
-        public Vector2 RotationCenter; 
+        private static Pool<SpriteRenderer> Pool = new Pool<SpriteRenderer>();
 
-        public Point Offset;
-        public Point Size;
-
-        public SpriteRenderer()
+        public override void ReturnToPool()
         {
             Color = Color.White;
+            Source = null;
+            Target = Rectangle.Empty;
+            Texture = null;
+            Offset = Size = Point.Zero;
+            Pool.Return(this);
         }
 
         public override void Draw(SpriteBatch batchUi, SpriteBatch batch, GameObject Parent)
@@ -49,7 +55,7 @@ namespace MonogameFacade
         public Point Offset;
         public Point Size;
 
-        public GuiSpriteRenderer()
+        public override void ReturnToPool()
         {
             Color = Color.White;
         }

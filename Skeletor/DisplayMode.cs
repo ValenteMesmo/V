@@ -8,7 +8,7 @@ namespace Skeletor
         public DisplayModeEnum mode ;
         private TextRenderer text;
 
-        public DisplayMode(BaseGame game)
+        public DisplayMode(Game game)
         {
             text = new TextRenderer();
             text.Text = "";
@@ -17,7 +17,7 @@ namespace Skeletor
             Renderers.Add(text);
         }
 
-        public override void Update(BaseGame game)
+        public override void Update(Game game)
         {
             var keyboard = Keyboard.GetState();
             if (keyboard.IsKeyDown(Keys.D1))

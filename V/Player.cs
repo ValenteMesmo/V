@@ -11,7 +11,7 @@ namespace V
         public InputKeeper input = null;
         public InputKeeper inputTouch = null;
         public InputKeeper inputTouchAction = null;
-        public Player(BaseGame game)
+        public Player(MonogameFacade.Game game)
         {
             input = new InputKeeper();
             inputTouch = new InputKeeper();
@@ -31,7 +31,7 @@ namespace V
             Colliders.Add(collider);
         }
 
-        public override void Update(BaseGame game)
+        public override void Update(MonogameFacade.Game game)
         {
             SetInputUsingKeyboard.Update(input);
             MovesUsingKeyboard.Update(this, input, inputTouch);

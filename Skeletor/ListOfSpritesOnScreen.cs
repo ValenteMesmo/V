@@ -6,16 +6,16 @@ namespace Skeletor
     public class ListOfSpritesOnScreen : GameObject
     {
         private animsadasd animsaidasd;
-        Pool<GuiLabel> Pool = null;
+        Pool<GuiButton> Pool = null;
 
         public ListOfSpritesOnScreen(animsadasd animsaidasd)
         {
             this.animsaidasd = animsaidasd;
-            Pool = new Pool<GuiLabel>();
+            Pool = new Pool<GuiButton>();
             Location = new Point(-600, -350);
         }
 
-        public override void Update(BaseGame game)
+        public override void Update(MonogameFacade.Game game)
         {
             Renderers.Clear();
             Pool.Clear();
@@ -28,7 +28,7 @@ namespace Skeletor
             {
                 var Label = Pool.Get();
                 Label.SetText("test " + ++i);
-                Label.SetOffset( new Point(0, (i -1) * 120));
+                Label.SetOffset( new Point(0, (i -1) * 50));
                 Renderers.AddRange(Label.Renderers);
             }
         }

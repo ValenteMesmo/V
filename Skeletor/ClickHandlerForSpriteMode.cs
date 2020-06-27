@@ -59,7 +59,7 @@ namespace Skeletor
             this.preview = new Sprite(texutre) { };
         }
 
-        public override void Update(BaseGame game)
+        public override void Update(MonogameFacade.Game game)
         {
             Renderers.Clear();
             if (mode.mode != DisplayModeEnum.Sprite)

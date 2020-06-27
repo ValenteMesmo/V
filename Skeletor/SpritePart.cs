@@ -8,7 +8,7 @@ namespace Skeletor
     {
         private readonly SpriteRenderer sprite;
 
-        public SpritePart(BaseGame game)
+        public SpritePart(MonogameFacade.Game game)
         {
             this.sprite = new SpriteRenderer();
             sprite.Texture = game.GetTexture("btn");
@@ -19,7 +19,7 @@ namespace Skeletor
             Renderers.Add(sprite);
         }
 
-        public override void Update(BaseGame game)
+        public override void Update(MonogameFacade.Game game)
         {
             //sprite.Rotation += 0.01f;
         }

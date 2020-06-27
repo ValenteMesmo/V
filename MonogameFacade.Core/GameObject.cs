@@ -4,13 +4,19 @@ using System.Collections.Generic;
 
 namespace MonogameFacade
 {
-    public abstract class GameObject
+    public sealed class GameObject 
     {
         public Point Location;
         public Point Velocity;
-        public bool IsPassive = true;
-        public List<Collider> Colliders = null;
-        public List<Renderer> Renderers = null;
+        public bool IsPassive;
+        public readonly List<Collider> Colliders = null;
+        public readonly List<Renderer> Renderers = null;
+
+        private static Pool<GameObject> Pool = new Pool<GameObject>();
+
+        public static GameObject GetFromPool() {
+            return Pool.Get();
+        }
 
         public GameObject()
         {
@@ -18,6 +24,20 @@ namespace MonogameFacade
             Renderers = new List<Renderer>();
         }
 
-        public virtual void Update(BaseGame game) { }
+        public void ReturnToPool()
+        {
+            foreach (var collider in Colliders)
+                collider.ReturnToPool();
+            Colliders.Clear();
+
+            foreach (var renderer in Renderers)
+                renderer.ReturnToPool();
+            Renderers.Clear();
+
+            IsPassive = true;
+            Velocity = Location = Point.Zero;
+
+            Pool.Return(this);
+        }
     }
 }

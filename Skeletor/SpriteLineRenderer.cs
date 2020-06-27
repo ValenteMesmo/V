@@ -18,16 +18,21 @@ namespace Skeletor
         public Vector2 Scale;
         public Vector2 Origin;
         public Texture2D Texture = null;
-        public List<SpriteOnDrawMode> Children = null;
+        public List<SpriteOnDrawMode> Children = new List<SpriteOnDrawMode>();
         public SharedProperty<int> SelectedDepth = null;
         public int OwnDepth;
 
-        public SpriteOnDrawMode(Texture2D Texture, SharedProperty<int> SelectedDepth)
+        public override void Begin()
         {
-            this.SelectedDepth = SelectedDepth;
-            this.Texture = Texture;
-            Children = new List<SpriteOnDrawMode>();
+            base.Begin();
+            this.Texture = null;
+            this.SelectedDepth = null;
             Scale = new Vector2(1);
+        }
+
+        public override void End()
+        {
+            
         }
 
         // Transform = -Origin * Scale * Rotation * Translation
@@ -108,13 +113,14 @@ namespace Skeletor
         public Vector2 Scale;
         public Vector2 Origin;
         public Texture2D Texture = null;
-        public List<Sprite> Children = null;
+        public List<Sprite> Children = new List<Sprite>();
 
-        public Sprite(Texture2D Texture)
+        public override void End()
         {
-            this.Texture = Texture;
-            Children = new List<Sprite>();
             Scale = new Vector2(1);
+            this.Texture = null;
+            Children.ForEach(f => f.End());
+            Children.Clear();
         }
 
         // Transform = -Origin * Scale * Rotation * Translation
@@ -176,14 +182,16 @@ namespace Skeletor
 
     public class SpriteLineRenderer : Renderer
     {
-        public readonly Texture2D texture = null;
+        public Texture2D texture = null;
         public Vector2 start;
         public Vector2 end;
         public Rectangle? source = null;
 
-        public SpriteLineRenderer(Texture2D texture)
+        public override void End()
         {
-            this.texture = texture;
+            texture = null;
+            end = start = Vector2.Zero;
+            source = null;
         }
 
         public override void Draw(

@@ -8,9 +8,11 @@ using System.Collections.Generic;
 
 namespace MonogameFacade
 {
-    public abstract class BaseGame : Game
+    using OldGame = Microsoft.Xna.Framework.Game;
+
+    public abstract class Game : OldGame
     {
-        public static BaseGame Instance = null;
+        public static Game Instance = null;
 
         public Action<long> Vibrate = null;
         public List<Vector2> Touches = null;
@@ -36,7 +38,7 @@ namespace MonogameFacade
             return this.Textures[name];
         }
 
-        public BaseGame()
+        public Game()
         {
             Instance = this;
             Vibrate = f => { };

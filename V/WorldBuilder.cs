@@ -7,7 +7,7 @@ namespace V
 {
     public class WorldBuilder : GameObject
     {
-        public WorldBuilder(BaseGame game)
+        public WorldBuilder(MonogameFacade.Game game)
         {
             Location = new Point(-1500, -1500);
             AddBlocks(game);
@@ -18,7 +18,7 @@ namespace V
             game.Objects.Add(new FpsDisplay(game));
         }
 
-        private void AddBlocks(BaseGame game)
+        private void AddBlocks(MonogameFacade.Game game)
         {
             for (int i = 0; i < 15; i++)
                 for (int j = 0; j < 10; j++)
@@ -26,7 +26,7 @@ namespace V
                         AddBlock(game, i, j);
         }
 
-        private void AddBlock(BaseGame game, int i, int j)
+        private void AddBlock(MonogameFacade.Game game, int i, int j)
         {
             var block = new Block(game);
             block.Location = Location;
@@ -35,7 +35,7 @@ namespace V
             game.Objects.Add(block);
         }
 
-        public override void Update(BaseGame game)
+        public override void Update(MonogameFacade.Game game)
         {
         }
     }
