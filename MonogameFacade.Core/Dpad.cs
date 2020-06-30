@@ -4,73 +4,92 @@ using System;
 
 namespace MonogameFacade
 {
-    public enum DpadDirection
+    public enum GamePadDirection
     {
         None, Up, Down, Left, Right
     }
 
-    public abstract class BaseFourTouchanleButtons : GameObject
+    public struct GamePadData
     {
-        protected InputKeeper input = null;
+        public InputKeeper input;
         public Rectangle touchArea;
         public Vector2 delta;
+        public GamePadDirection CurrentDirection;
+        public GamePadDirection PreviousDirection;
+        public Vector2 DpadCenter;
+        public Vector2 previousTouch;
+        public Color Color;
+    }
+
+    public static class BaseFourTouchanleButtons
+    {
         public const int minDistance = 30;
         public const int extraSize = 150;
         public const int Size = 160;
-        public DpadDirection CurrentDirection;
-        public DpadDirection PreviousDirection;
-        public Vector2 DpadCenter;
-        public Vector2 previousTouch;
-        protected Color Color;
 
-        public BaseFourTouchanleButtons(Game game, InputKeeper input)
+        public static GameObject Create(InputKeeper input, Point Location)
         {
-            this.input = input;
-            touchArea = new Rectangle(Location, new Point(Size, Size));
-            previousTouch = DpadCenter = touchArea.Center.ToVector2();
-            touchArea = new Rectangle(
+            var GamePadData = new GamePadData();
+            GamePadData.input = input;
+            GamePadData.touchArea = new Rectangle(Location, new Point(Size, Size));
+            GamePadData.DpadCenter = Vector2.Zero;
+            GamePadData.PreviousDirection = GamePadDirection.None;
+            GamePadData.CurrentDirection = GamePadDirection.None;
+            GamePadData.previousTouch =
+                GamePadData.DpadCenter =
+                GamePadData.touchArea.Center.ToVector2();
+            GamePadData.Color = Color.White;
+            GamePadData.touchArea = new Rectangle(
                 Location.X - (extraSize / 2)
                 , Location.Y - (extraSize / 2)
                 , Size + extraSize
                 , Size + extraSize);
+
+            var obj = GameObject.GetFromPool();
+            //esse initial location ta estranho
+            obj.Location = Location;
+            obj.Update = () => Update(GamePadData);
+            return obj;
         }
 
-        public override void Update(Game game)
+        public static void Update(GamePadData pad)
         {
-            var newDirection = CalculateDpadDirection(game);
-            PreviousDirection = CurrentDirection;
-            CurrentDirection = newDirection;
+            var newDirection = CalculateDpadDirection(pad);
+            pad.PreviousDirection = pad.CurrentDirection;
+            pad.CurrentDirection = newDirection;
 
-            if (CurrentDirection != PreviousDirection)
-                game.Vibrate(TouchVibration);
+            //TODO: introduce cooldown to prevent vibration on release when rapidly pressing
+            if (pad.CurrentDirection != pad.PreviousDirection)
+                Game.Instance.Vibrate(TouchVibration);
 
-            switch (CurrentDirection)
+            switch (pad.CurrentDirection)
             {
-                case DpadDirection.None:
-                    UpdateInput();
-                    Color = Color.White;
+                case GamePadDirection.None:
+                    UpdateInput(pad.input);
+                    pad.Color = Color.White;
                     break;
-                case DpadDirection.Up:
-                    UpdateInput(up: true);
-                    Color = Color.Yellow;
+                case GamePadDirection.Up:
+                    UpdateInput(pad.input, up: true);
+                    pad.Color = Color.Yellow;
                     break;
-                case DpadDirection.Down:
-                    UpdateInput(down: true);
-                    Color = Color.Magenta;
+                case GamePadDirection.Down:
+                    UpdateInput(pad.input, down: true);
+                    pad.Color = Color.Magenta;
                     break;
-                case DpadDirection.Left:
-                    UpdateInput(left: true);
-                    Color = Color.Red;
+                case GamePadDirection.Left:
+                    UpdateInput(pad.input, left: true);
+                    pad.Color = Color.Red;
                     break;
-                case DpadDirection.Right:
-                    UpdateInput(right: true);
-                    Color = Color.Blue;
+                case GamePadDirection.Right:
+                    UpdateInput(pad.input, right: true);
+                    pad.Color = Color.Blue;
                     break;
             }
         }
 
-        private void UpdateInput(
-            bool up = false
+        private static void UpdateInput(
+            InputKeeper input
+            , bool up = false
             , bool down = false
             , bool left = false
             , bool right = false)
@@ -84,27 +103,27 @@ namespace MonogameFacade
         private const int TouchVibration = 1;
         private const int UntouchVibration = 1;
 
-        private DpadDirection CalculateDpadDirection(Game game)
+        private static GamePadDirection CalculateDpadDirection(GamePadData pad)
         {
-            for (int i = 0; i < game.TouchesUi.Count; i++)
-                if (touchArea.Contains(game.TouchesUi[i]))
-                    if (PreviousDirection == DpadDirection.Right)
-                        return CalculationsFromTheRight(game.TouchesUi[i]);
-                    else if (PreviousDirection == DpadDirection.Left)
-                        return CalculationsFromTheLeft(game.TouchesUi[i]);
-                    else if (PreviousDirection == DpadDirection.Up)
-                        return CalculationsFromUp(game.TouchesUi[i]);
-                    else if (PreviousDirection == DpadDirection.Down)
-                        return CalculationsFromDown(game.TouchesUi[i]);
+            for (int i = 0; i < Game.Instance.TouchesUi.Count; i++)
+                if (pad.touchArea.Contains(Game.Instance.TouchesUi[i]))
+                    if (pad.PreviousDirection == GamePadDirection.Right)
+                        return CalculationsFromTheRight(Game.Instance.TouchesUi[i], pad.previousTouch);
+                    else if (pad.PreviousDirection == GamePadDirection.Left)
+                        return CalculationsFromTheLeft(Game.Instance.TouchesUi[i], pad.previousTouch);
+                    else if (pad.PreviousDirection == GamePadDirection.Up)
+                        return CalculationsFromUp(Game.Instance.TouchesUi[i], pad.previousTouch);
+                    else if (pad.PreviousDirection == GamePadDirection.Down)
+                        return CalculationsFromDown(Game.Instance.TouchesUi[i], pad.previousTouch);
                     else
-                        return CalculationsFromNone(game.TouchesUi[i]);
+                        return CalculationsFromNone(Game.Instance.TouchesUi[i], pad.previousTouch);
 
-            return DpadDirection.None;
+            return GamePadDirection.None;
         }
 
-        private DpadDirection CalculationsFromTheRight(Vector2 touch)
+        private static GamePadDirection CalculationsFromTheRight(Vector2 touch, Vector2 previousTouch)
         {
-            delta = previousTouch - touch;
+            var delta = previousTouch - touch;
             var distanceXAbs = Math.Abs(delta.X);
             var distanceYAbs = Math.Abs(delta.Y);
 
@@ -125,22 +144,22 @@ namespace MonogameFacade
 
             if (fingerWentLeft)
                 if (fingerWentUp)
-                    return DpadDirection.Up;
+                    return GamePadDirection.Up;
                 else if (fingerWentDown)
-                    return DpadDirection.Down;
+                    return GamePadDirection.Down;
                 else
-                    return DpadDirection.Left;
+                    return GamePadDirection.Left;
             else if (fingerWentUp)
-                return DpadDirection.Up;
+                return GamePadDirection.Up;
             else if (fingerWentDown)
-                return DpadDirection.Down;
+                return GamePadDirection.Down;
             else
-                return DpadDirection.Right;
+                return GamePadDirection.Right;
         }
 
-        private DpadDirection CalculationsFromTheLeft(Vector2 touch)
+        private static GamePadDirection CalculationsFromTheLeft(Vector2 touch, Vector2 previousTouch)
         {
-            delta = previousTouch - touch;
+            var delta = previousTouch - touch;
             var distanceXAbs = Math.Abs(delta.X);
             var distanceYAbs = Math.Abs(delta.Y);
 
@@ -161,22 +180,22 @@ namespace MonogameFacade
 
             if (fingerWentRight)
                 if (fingerWentUp)
-                    return DpadDirection.Up;
+                    return GamePadDirection.Up;
                 else if (fingerWentDown)
-                    return DpadDirection.Down;
+                    return GamePadDirection.Down;
                 else
-                    return DpadDirection.Right;
+                    return GamePadDirection.Right;
             else if (fingerWentUp)
-                return DpadDirection.Up;
+                return GamePadDirection.Up;
             else if (fingerWentDown)
-                return DpadDirection.Down;
+                return GamePadDirection.Down;
             else
-                return DpadDirection.Left;
+                return GamePadDirection.Left;
         }
 
-        private DpadDirection CalculationsFromUp(Vector2 touch)
+        private static GamePadDirection CalculationsFromUp(Vector2 touch, Vector2 previousTouch)
         {
-            delta = previousTouch - touch;
+            var delta = previousTouch - touch;
             var distanceXAbs = Math.Abs(delta.X);
             var distanceYAbs = Math.Abs(delta.Y);
 
@@ -197,22 +216,22 @@ namespace MonogameFacade
 
             if (fingerWentDown)
                 if (fingerWentRight)
-                    return CurrentDirection = DpadDirection.Right;
+                    return GamePadDirection.Right;
                 else if (fingerWentLeft)
-                    return CurrentDirection = DpadDirection.Left;
+                    return GamePadDirection.Left;
                 else
-                    return DpadDirection.Down;
+                    return GamePadDirection.Down;
             else if (fingerWentLeft)
-                return DpadDirection.Left;
+                return GamePadDirection.Left;
             else if (fingerWentRight)
-                return DpadDirection.Right;
+                return GamePadDirection.Right;
             else
-                return DpadDirection.Up;
+                return GamePadDirection.Up;
         }
 
-        private DpadDirection CalculationsFromDown(Vector2 touch)
+        private static GamePadDirection CalculationsFromDown(Vector2 touch, Vector2 previousTouch)
         {
-            delta = previousTouch - touch;
+            var delta = previousTouch - touch;
             var distanceXAbs = Math.Abs(delta.X);
             var distanceYAbs = Math.Abs(delta.Y);
 
@@ -233,22 +252,22 @@ namespace MonogameFacade
 
             if (fingerWentUp)
                 if (fingerWentRight)
-                    return DpadDirection.Right;
+                    return GamePadDirection.Right;
                 else if (fingerWentLeft)
-                    return DpadDirection.Left;
+                    return GamePadDirection.Left;
                 else
-                    return DpadDirection.Up;
+                    return GamePadDirection.Up;
             else if (fingerWentRight)
-                return DpadDirection.Right;
+                return GamePadDirection.Right;
             else if (fingerWentLeft)
-                return DpadDirection.Left;
+                return GamePadDirection.Left;
             else
-                return DpadDirection.Down;
+                return GamePadDirection.Down;
         }
 
-        private DpadDirection CalculationsFromNone(Vector2 touch)
+        private static GamePadDirection CalculationsFromNone(Vector2 touch, Vector2 previousTouch)
         {
-            delta = previousTouch - touch;
+            var delta = previousTouch - touch;
             var distanceXAbs = Math.Abs(delta.X);
             var distanceYAbs = Math.Abs(delta.Y);
 
@@ -274,24 +293,24 @@ namespace MonogameFacade
 
             if (fingerWentRight)
                 if (fingerWentUp)
-                    return DpadDirection.Up;
+                    return GamePadDirection.Up;
                 else if (fingerWentDown)
-                    return DpadDirection.Down;
+                    return GamePadDirection.Down;
                 else
-                    return DpadDirection.Right;
+                    return GamePadDirection.Right;
             else if (fingerWentLeft)
                 if (fingerWentUp)
-                    return DpadDirection.Up;
+                    return GamePadDirection.Up;
                 else if (fingerWentDown)
-                    return DpadDirection.Down;
+                    return GamePadDirection.Down;
                 else
-                    return DpadDirection.Left;
+                    return GamePadDirection.Left;
             else if (fingerWentUp)
-                return DpadDirection.Up;
+                return GamePadDirection.Up;
             else if (fingerWentDown)
-                return DpadDirection.Down;
+                return GamePadDirection.Down;
             else
-                return DpadDirection.None;
+                return GamePadDirection.None;
         }
     }
 

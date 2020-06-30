@@ -10,7 +10,7 @@ namespace MonogameFacade
         public Point Size;
         public Point Offset;
         public Rectangle? Source;
-        public Vector2 RotationCenter; 
+        public Vector2 RotationCenter;
         public float Rotation;
 
         private Rectangle Target;
@@ -25,6 +25,11 @@ namespace MonogameFacade
             Texture = null;
             Offset = Size = Point.Zero;
             Pool.Return(this);
+        }
+
+        public static SpriteRenderer GetFromPool()
+        {
+            return Pool.Get();
         }
 
         public override void Draw(SpriteBatch batchUi, SpriteBatch batch, GameObject Parent)
@@ -64,7 +69,7 @@ namespace MonogameFacade
         {
             Target.Location = Offset + Parent.Location;
             Target.Size = Size;
-            
+
             batchGui.Draw(
                 Texture
                 , Target

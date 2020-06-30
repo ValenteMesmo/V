@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace MonogameFacade
 {
-    public sealed class GameObject 
+    public sealed class GameObject
     {
         public Point Location;
         public Point Velocity;
@@ -13,8 +13,13 @@ namespace MonogameFacade
         public readonly List<Renderer> Renderers = null;
 
         private static Pool<GameObject> Pool = new Pool<GameObject>();
+        public static readonly Action NoUpdate = () => { };
 
-        public static GameObject GetFromPool() {
+        public Action Update = null;
+
+
+        public static GameObject GetFromPool()
+        {
             return Pool.Get();
         }
 
@@ -22,6 +27,7 @@ namespace MonogameFacade
         {
             Colliders = new List<Collider>();
             Renderers = new List<Renderer>();
+            Update = NoUpdate;
         }
 
         public void ReturnToPool()
@@ -36,6 +42,7 @@ namespace MonogameFacade
 
             IsPassive = true;
             Velocity = Location = Point.Zero;
+            Update = NoUpdate;
 
             Pool.Return(this);
         }

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace MonogameFacade.Core.Systems
 {
-    public class InputKeeper
+    public struct InputKeeper
     {
         public bool Up;
         public bool Down;

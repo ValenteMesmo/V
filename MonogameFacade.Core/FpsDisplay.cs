@@ -1,20 +1,22 @@
 ﻿namespace MonogameFacade
 {
-    public class FpsDisplay : GameObject
+    public static class FpsDisplay
     {
-        TextRenderer text = null;
-               
-        public FpsDisplay(Game game)
+        public static GameObject Create()
         {
-            text = new TextRenderer();
-            text.Font = game.Font;            
-            Renderers.Add(text);
+            var obj = GameObject.GetFromPool();
+            var text = TextRenderer.GetFromPool();
+            obj.Renderers.Add(text);
+
+            obj.Update = () => Update(obj, text);
+
+            return obj;
         }
-        
-        public override void Update(Game game)
+
+        public static void Update(GameObject obj, TextRenderer text)
         {
-            Location = game.Camera.Location;
-            text.Text = ((int)game.FrameCounter.CurrentFramesPerSecond).ToString();
+            obj.Location = Game.Instance.Camera.Location;
+            text.Text = ((int)Game.Instance.FrameCounter.CurrentFramesPerSecond).ToString();
         }
     }
 }

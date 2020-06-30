@@ -10,12 +10,20 @@ namespace MonogameFacade
         public float scale;
         public Color Color;
 
-        public override void Begin()
+        private static Pool<GuiTextRenderer> Pool = new Pool<GuiTextRenderer>();
+
+        public override void ReturnToPool()
         {
-            base.Begin();
             Font = Game.Instance.Font;
             Color = Color.Red;
             scale = 10;
+            Text = "";
+            Pool.Return(this);
+        }
+
+        public GuiTextRenderer GetFromPool()
+        {
+            return Pool.Get();
         }
 
         public override void Draw(SpriteBatch batchGui, SpriteBatch batch, GameObject Parent)
@@ -32,12 +40,6 @@ namespace MonogameFacade
                 , 0
             );
         }
-
-        public override void End()
-        {
-            Color = Color.Red;
-            scale = 10;
-        }
     }
 
     public class TextRenderer : Renderer
@@ -48,12 +50,21 @@ namespace MonogameFacade
         public Color Color;
         public Point Offset;
 
-        public override void Begin()
+        private static Pool<TextRenderer> Pool = new Pool<TextRenderer>();
+
+        public override void ReturnToPool()
         {
-            base.Begin();
+
             Color = Color.Red;
             scale = 10;
+            Offset = Point.Zero;
             Font = Game.Instance.Font;
+            Pool.Return(this);
+        }
+
+        public static TextRenderer GetFromPool()
+        {
+            return Pool.Get();
         }
 
         public override void Draw(SpriteBatch batchGui, SpriteBatch batch, GameObject Parent)
@@ -69,13 +80,6 @@ namespace MonogameFacade
                 , SpriteEffects.None
                 , 0
             );
-        }
-
-        public override void End()
-        {
-            Color = Color.Red;
-            scale = 10;
-            Offset = Point.Zero;
         }
     }
 }

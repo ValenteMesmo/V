@@ -2,22 +2,22 @@
 
 namespace MonogameFacade
 {
-    public static class Block 
+    public static class Block
     {
         public const int Size = 1000;
 
-        public static GameObject Create() {
-
+        public static GameObject Create()
+        {
             var obj = GameObject.GetFromPool();
 
-            var sprite = new SpriteRenderer();
-            sprite.Texture = game.GetTexture("btn");
+            var sprite = SpriteRenderer.GetFromPool();
+            sprite.Texture = Game.Instance.GetTexture("btn");
             sprite.Size = new Point(Size, Size);
-            Renderers.Add(sprite);
+            obj.Renderers.Add(sprite);
 
-            var collider = new Collider(this);
+            var collider = Collider.GetFromPool();
             collider.Area = new Rectangle(Point.Zero, sprite.Size);
-            Colliders.Add(collider);
+            obj.Colliders.Add(collider);
 
             return obj;
         }
