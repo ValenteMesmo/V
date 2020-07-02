@@ -27,27 +27,25 @@ namespace MonogameFacade
         public const int extraSize = 150;
         public const int Size = 160;
 
-        public static GameObject Create(InputKeeper input, Point Location)
+        public static GameObject Create(GamePadData GamePadData)
         {
-            var GamePadData = new GamePadData();
-            GamePadData.input = input;
-            GamePadData.touchArea = new Rectangle(Location, new Point(Size, Size));
-            GamePadData.DpadCenter = Vector2.Zero;
-            GamePadData.PreviousDirection = GamePadDirection.None;
-            GamePadData.CurrentDirection = GamePadDirection.None;
-            GamePadData.previousTouch =
-                GamePadData.DpadCenter =
-                GamePadData.touchArea.Center.ToVector2();
-            GamePadData.Color = Color.White;
-            GamePadData.touchArea = new Rectangle(
-                Location.X - (extraSize / 2)
-                , Location.Y - (extraSize / 2)
-                , Size + extraSize
-                , Size + extraSize);
-
             var obj = GameObject.GetFromPool();
-            //esse initial location ta estranho
-            obj.Location = Location;
+
+            //GamePadData.touchArea = new Rectangle(Location, new Point(Size, Size));
+            //GamePadData.DpadCenter = Vector2.Zero;
+            //GamePadData.PreviousDirection = GamePadDirection.None;
+            //GamePadData.CurrentDirection = GamePadDirection.None;
+            //GamePadData.previousTouch =
+            //    GamePadData.DpadCenter =
+            //    GamePadData.touchArea.Center.ToVector2();
+            GamePadData.Color = Color.White;
+            //GamePadData.touchArea = new Rectangle(
+            //    Location.X - (extraSize / 2)
+            //    , Location.Y - (extraSize / 2)
+            //    , Size + extraSize
+            //    , Size + extraSize);
+
+
             obj.Update = () => Update(GamePadData);
             return obj;
         }
@@ -314,92 +312,103 @@ namespace MonogameFacade
         }
     }
 
-    public class Dpad : BaseFourTouchanleButtons
+    public static class Dpad
     {
-        public GuiSpriteRenderer sprite = null;
+        //public GuiSpriteRenderer sprite = null;
 
-        public Dpad(Game game, InputKeeper input) : base(game, input)
+        public static GameObject Create(InputKeeper input)
         {
+            var data = new GamePadData();
+            data.input = input;
+
+            var obj = BaseFourTouchanleButtons.Create(data);
+            obj.Location = new Point(-600, -320);
+
             var sprite2 = new GuiSpriteRenderer();
-            sprite2.Texture = game.GetTexture("btn");
-            sprite2.Size = new Point(Size, Size);
+            sprite2.Texture = Game.Instance.GetTexture("btn");
+            sprite2.Size = new Point(BaseFourTouchanleButtons.Size, BaseFourTouchanleButtons.Size);
             sprite2.Color = Color.DarkGray;
             //Renderers.Add(sprite2);
 
 
-            sprite = new GuiSpriteRenderer();
-            sprite.Texture = game.GetTexture("shadedDark04");
-            sprite.Size = new Point(Size, Size);
-            Location.X = -600;
-            Location.Y = -320;
+            var sprite = new GuiSpriteRenderer();
+            sprite.Texture = Game.Instance.GetTexture("shadedDark04");
+            sprite.Size = new Point(BaseFourTouchanleButtons.Size, BaseFourTouchanleButtons.Size);
             //sprite.Offset = new Point(-1400, -750);
             //sprite.Offset = new Point(-585, -300);
             //sprite.Offset = new Point(-350, -150);
-            Renderers.Add(sprite);
-            touchArea = new Rectangle(Location, sprite.Size);
-            previousTouch = DpadCenter = touchArea.Center.ToVector2();
-            touchArea = new Rectangle(
-                Location.X - (extraSize / 2)
-                , Location.Y - (extraSize / 2)
-                , sprite.Size.X + extraSize
-                , sprite.Size.Y + extraSize);
+            obj.Renderers.Add(sprite);
 
-            sprite2.Size = touchArea.Size;
-            sprite2.Offset = new Point(-(extraSize / 2), -(extraSize / 2));
+            data.touchArea = new Rectangle(obj.Location, sprite.Size); ;
+            data.previousTouch = data.DpadCenter = data.touchArea.Center.ToVector2();
+            data.touchArea = new Rectangle(
+                obj.Location.X - (BaseFourTouchanleButtons.extraSize / 2)
+                , obj.Location.Y - (BaseFourTouchanleButtons.extraSize / 2)
+                , sprite.Size.X + BaseFourTouchanleButtons.extraSize
+                , sprite.Size.Y + BaseFourTouchanleButtons.extraSize);
+
+            sprite2.Size = data.touchArea.Size;
+            sprite2.Offset = new Point(-(BaseFourTouchanleButtons.extraSize / 2), -(BaseFourTouchanleButtons.extraSize / 2));
+
+            return obj;
         }
 
 
     }
 
-    public class ActionButtons : BaseFourTouchanleButtons
+    public static class ActionButtons
     {
         const int buttonSize = 70;
 
-        public ActionButtons(Game game, InputKeeper input) : base(game, input)
+        public static GameObject Create(InputKeeper input)
         {
-            Location.X = 430;
-            Location.Y = -320;
+            var data = new GamePadData();
+            data.input = input;
+            var obj = BaseFourTouchanleButtons.Create(data);
+
+            obj.Location = new Point(430, -320);
 
             var sprite = new GuiSpriteRenderer();
-            sprite.Texture = game.GetTexture("btn");
-            sprite.Size = new Point(Size, Size);
+            sprite.Texture = Game.Instance.GetTexture("btn");
+            sprite.Size = new Point(BaseFourTouchanleButtons.Size, BaseFourTouchanleButtons.Size);
             sprite.Color = Color.DarkGray;
             //Renderers.Add(sprite);
 
             var sprite1 = new GuiSpriteRenderer();
-            sprite1.Texture = game.GetTexture("shadedDark39");
+            sprite1.Texture = Game.Instance.GetTexture("shadedDark39");
             sprite1.Offset = new Point(45, -10);
             sprite1.Size = new Point(buttonSize, buttonSize);
-            Renderers.Add(sprite1);
+            obj.Renderers.Add(sprite1);
 
             var sprite2 = new GuiSpriteRenderer();
-            sprite2.Texture = game.GetTexture("shadedDark37");
+            sprite2.Texture = Game.Instance.GetTexture("shadedDark37");
             sprite2.Offset = new Point(100, 45);
             sprite2.Size = new Point(buttonSize, buttonSize);
-            Renderers.Add(sprite2);
+            obj. Renderers.Add(sprite2);
 
             var sprite3 = new GuiSpriteRenderer();
-            sprite3.Texture = game.GetTexture("shadedDark36");
+            sprite3.Texture = Game.Instance.GetTexture("shadedDark36");
             sprite3.Offset = new Point(45, 100);
             sprite3.Size = new Point(buttonSize, buttonSize);
-            Renderers.Add(sprite3);
+            obj.Renderers.Add(sprite3);
 
             var sprite4 = new GuiSpriteRenderer();
-            sprite4.Texture = game.GetTexture("shadedDark38");
+            sprite4.Texture = Game.Instance.GetTexture("shadedDark38");
             sprite4.Offset = new Point(-10, 45);
             sprite4.Size = new Point(buttonSize, buttonSize);
-            Renderers.Add(sprite4);
+            obj. Renderers.Add(sprite4);
 
-            touchArea = new Rectangle(Location, new Point(Size, Size));
-            previousTouch = DpadCenter = touchArea.Center.ToVector2();
-            touchArea = new Rectangle(
-                Location.X - (extraSize / 2)
-                , Location.Y - (extraSize / 2)
-                , Size + extraSize
-                , Size + extraSize);
+            data.touchArea = new Rectangle(obj.Location, new Point(BaseFourTouchanleButtons.Size, BaseFourTouchanleButtons.Size));
+            data.previousTouch = data.DpadCenter = data.touchArea.Center.ToVector2();
+            data.touchArea = new Rectangle(
+                obj.Location.X - (BaseFourTouchanleButtons.extraSize / 2)
+                , obj.Location.Y - (BaseFourTouchanleButtons.extraSize / 2)
+                , BaseFourTouchanleButtons.Size + BaseFourTouchanleButtons.extraSize
+                , BaseFourTouchanleButtons.Size + BaseFourTouchanleButtons.extraSize);
 
-            sprite.Size = touchArea.Size;
-            sprite.Offset = new Point(-(extraSize / 2), -(extraSize / 2));
+            sprite.Size = data.touchArea.Size;
+            sprite.Offset = new Point(-(BaseFourTouchanleButtons.extraSize / 2), -(BaseFourTouchanleButtons.extraSize / 2));
+            return obj;
         }
     }
 }
