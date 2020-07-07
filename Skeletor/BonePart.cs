@@ -2,11 +2,11 @@
 
 namespace Skeletor
 {
-    public class BonePart : GameObject
-    {
-        public BonePart(SpriteLineRenderer renderer)
-        {            
-            Renderers.Add(renderer);
-        }
-    }
+    //public class BonePart : GameObject
+    //{
+    //    public BonePart(SpriteLineRenderer renderer)
+    //    {            
+    //        Renderers.Add(renderer);
+    //    }
+    //}
 }

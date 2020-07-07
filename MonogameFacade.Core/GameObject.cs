@@ -11,6 +11,7 @@ namespace MonogameFacade
         public bool IsPassive;
         public readonly List<Collider> Colliders = null;
         public readonly List<Renderer> Renderers = null;
+        public int Identifier;
 
         private static Pool<GameObject> Pool = new Pool<GameObject>();
         public static readonly Action NoUpdate = () => { };
@@ -43,6 +44,7 @@ namespace MonogameFacade
             IsPassive = true;
             Velocity = Location = Point.Zero;
             Update = NoUpdate;
+            Identifier = 0;
 
             Pool.Return(this);
         }

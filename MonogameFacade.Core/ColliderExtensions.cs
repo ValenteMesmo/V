@@ -13,13 +13,13 @@
             {
                 if (a.Right() - b.Right() > 0)
                 {
-                    a.Handler.Left(a, b);
-                    b.Handler.Right(b, a);
+                    a.LeftCollisionHandler(a, b);
+                    b.RightCollisionHandler(b, a);
                 }
                 else if (a.Right() - b.Right() < 0)
                 {
-                    a.Handler.Right(a, b);
-                    b.Handler.Left(b, a);
+                    a.RightCollisionHandler(a, b);
+                    b.LeftCollisionHandler(b, a);
                 }
             }
         }
@@ -36,13 +36,13 @@
             {
                 if (a.Bottom() - b.Bottom() > 0)
                 {
-                    a.Handler.Top(a, b);
-                    b.Handler.Bot(b, a);
+                    a.TopCollisionHandler(a, b);
+                    b.BotCollisionHandler(b, a);
                 }
                 else if (a.Bottom() - b.Bottom() < 0)
                 {
-                    a.Handler.Bot(a, b);
-                    b.Handler.Top(b, a);
+                    a.BotCollisionHandler(a, b);
+                    b.TopCollisionHandler(b, a);
                 }
             }
         }

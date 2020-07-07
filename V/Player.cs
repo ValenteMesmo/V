@@ -4,39 +4,54 @@ using MonogameFacade.Core.Systems;
 
 namespace V
 {
-    public class Player : GameObject
+    public static class Player
     {
-        private SpriteRenderer sprite = null;
-        private Collider collider = null;
-        public InputKeeper input = null;
-        public InputKeeper inputTouch = null;
-        public InputKeeper inputTouchAction = null;
-        public Player(MonogameFacade.Game game)
-        {
-            input = new InputKeeper();
-            inputTouch = new InputKeeper();
-            inputTouchAction = new InputKeeper();
-            IsPassive = false;
-            sprite = new SpriteRenderer
-            {
-                Color = Color.Cyan,
-                Texture = game.GetTexture("btn"),
-                Size = new Point(1000, 1000)
-            };
-            Renderers.Add(sprite);
+        //private SpriteRenderer sprite = null;
+        //private Collider collider = null;
+        //public InputKeeper input ;
+        //public InputKeeper inputTouch ;
+        //public InputKeeper inputTouchAction ;
 
-            collider = new Collider(this);
+        public static GameObject Create(
+            InputKeeper input
+            , InputKeeper inputTouch
+            , InputKeeper inputTouchAction
+        )
+        {
+            var obj = GameObject.GetFromPool();
+            obj.IsPassive = false;
+            var sprite = SpriteRenderer.GetFromPool();
+
+            sprite.Color = Color.Cyan;
+            sprite.Texture = MonogameFacade.Game.Instance.GetTexture("btn");
+            sprite.Size = new Point(1000, 1000);
+
+
+            obj.Renderers.Add(sprite);
+
+            var collider = Collider.GetFromPool();
             collider.Area = new Rectangle(Point.Zero, sprite.Size);
-            collider.Handler = new StopsWhenHitingBlocks();
-            Colliders.Add(collider);
+            collider.BotCollisionHandler = StopsWhenHitingBlocks.Bot;
+            collider.TopCollisionHandler = StopsWhenHitingBlocks.Top;
+            collider.LeftCollisionHandler = StopsWhenHitingBlocks.Left;
+            collider.RightCollisionHandler = StopsWhenHitingBlocks.Right;
+            obj.Colliders.Add(collider);
+
+            obj.Update = () => Update(obj, input, inputTouch, inputTouchAction);
+
+            return obj;
         }
 
-        public override void Update(MonogameFacade.Game game)
+        public static void Update(
+            GameObject obj
+            , InputKeeper input
+            , InputKeeper inputTouch
+            , InputKeeper inputTouchAction)
         {
             SetInputUsingKeyboard.Update(input);
-            MovesUsingKeyboard.Update(this, input, inputTouch);
-            JumpsUsingInput.Update(this, inputTouchAction);
-            Gravity.Apply(this);
+            MovesUsingKeyboard.Update(obj, input, inputTouch);
+            JumpsUsingInput.Update(obj, inputTouchAction);
+            Gravity.Apply(obj);
         }
     }
 }

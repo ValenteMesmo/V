@@ -1,42 +1,45 @@
 ﻿using Microsoft.Xna.Framework;
 using MonogameFacade;
+using MonogameFacade.Core.Systems;
 using System;
 using System.Collections.Generic;
 
 namespace V
 {
-    public class WorldBuilder : GameObject
+    public static class WorldBuilder
     {
-        public WorldBuilder(MonogameFacade.Game game)
+        public static void Create()
         {
-            Location = new Point(-1500, -1500);
-            AddBlocks(game);
-            var player = new Player(game) { Location = new Point(200, 200) };
-            game.Objects.Add(new Dpad(game, player.inputTouch));
-            game.Objects.Add(new ActionButtons(game, player.inputTouchAction));
-            game.Objects.Add(player);
-            game.Objects.Add(new FpsDisplay(game));
+            var obj = GameObject.GetFromPool();
+            obj .Location = new Point(-1500, -1500);
+            AddBlocks();
+
+            var inputTouch = new InputKeeper();
+            var inputTouchAction = new InputKeeper();
+            var input = new InputKeeper();
+
+            var player = Player.Create(input, inputTouch, inputTouchAction);
+            player.Location = new Point(200, 200);
+            MonogameFacade.Game.Instance.Objects.Add(Dpad.Create(inputTouch));
+            MonogameFacade.Game.Instance.Objects.Add(ActionButtons.Create(inputTouchAction));
+            MonogameFacade.Game.Instance.Objects.Add(player);
+            MonogameFacade.Game.Instance.Objects.Add(FpsDisplay.Create());
         }
 
-        private void AddBlocks(MonogameFacade.Game game)
+        private static void AddBlocks()
         {
             for (int i = 0; i < 15; i++)
                 for (int j = 0; j < 10; j++)
                     if (j == 0 || i == 0 || j == 9 || i == 14)
-                        AddBlock(game, i, j);
+                        AddBlock(i, j);
         }
 
-        private void AddBlock(MonogameFacade.Game game, int i, int j)
+        private static void AddBlock(int i, int j)
         {
-            var block = new Block(game);
-            block.Location = Location;
+            var block = Block.Create();            
             block.Location.X = block.Location.X + i * Block.Size;
             block.Location.Y = block.Location.Y + j * Block.Size;
-            game.Objects.Add(block);
-        }
-
-        public override void Update(MonogameFacade.Game game)
-        {
+            MonogameFacade.Game.Instance.Objects.Add(block);
         }
     }
 }

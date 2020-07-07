@@ -12,7 +12,7 @@ namespace V.Android
         protected override void LoadContent()
         {
             base.LoadContent();
-            Objects.Add(new WorldBuilder(this));
+            WorldBuilder.Create();
         }
     }
 }

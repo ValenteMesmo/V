@@ -92,7 +92,7 @@ namespace MonogameFacade
             for (int i = 0; i < Objects.Count; i++)
             {
                 currentObject = Objects[i];
-                currentObject.Update(this);
+                currentObject.Update();
 
                 currentObject.Location.Y =
                     currentObject.Location.Y
@@ -103,7 +103,7 @@ namespace MonogameFacade
                     {
                         currentCollider = currentObject.Colliders[j];
 
-                        currentCollider.Handler.BeforeCollisions();
+                        //currentCollider.BeforeCollisionHandlers;
                         for (int k = 0; k < Objects.Count; k++)
                             for (int l = 0; l < Objects[k].Colliders.Count; l++)
                                 CheckCollisions(
@@ -120,7 +120,7 @@ namespace MonogameFacade
                     {
                         currentCollider = currentObject.Colliders[j];
 
-                        currentCollider.Handler.BeforeCollisions();
+                        //currentCollider.BeforeCollisionHandlers();
                         for (int k = 0; k < Objects.Count; k++)
                             for (int l = 0; l < Objects[k].Colliders.Count; l++)
                                 CheckCollisions(

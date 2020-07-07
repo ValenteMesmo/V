@@ -50,7 +50,7 @@ namespace MonogameFacade
         }
     }
 
-    public class Collider 
+    public class Collider
     {
         private static Pool<Collider> Pool = new Pool<Collider>();
 
@@ -62,16 +62,30 @@ namespace MonogameFacade
         public int Width => Area.Width;
         public int Height => Area.Height;
 
-        public CollisionHandler Handler = CollisionHandler.Empty;
+        //public CollisionHandler Handler = CollisionHandler.Empty;
+
+        public Action<Collider, Collider> TopCollisionHandler;
+        public Action<Collider, Collider> LeftCollisionHandler;
+        public Action<Collider, Collider> BotCollisionHandler;
+        public Action<Collider, Collider> RightCollisionHandler;
+        //public Action<Collider> BeforeCollisionHandlers;
+        
 
         [Obsolete]
         public Collider() { }
+
+        private static readonly Action<Collider, Collider> DefaultCollider = (a, b) => { };
 
         public void ReturnToPool()
         {
             Parent = null;
             Area = Rectangle.Empty;
-            Handler = CollisionHandler.Empty;
+            //Handler = CollisionHandler.Empty;
+            TopCollisionHandler = 
+                BotCollisionHandler = 
+                LeftCollisionHandler = 
+                RightCollisionHandler = 
+                DefaultCollider;
 
             Pool.Return(this);
         }
