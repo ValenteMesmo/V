@@ -19,7 +19,7 @@ namespace V
             var input = new InputKeeper();
 
             var player = Player.Create(input, inputTouch, inputTouchAction);
-            player.Location = new Point(200, 200);
+            player.Location = new Point(1500, 500);
             MonogameFacade.Game.Instance.Objects.Add(Dpad.Create(inputTouch));
             MonogameFacade.Game.Instance.Objects.Add(ActionButtons.Create(inputTouchAction));
             MonogameFacade.Game.Instance.Objects.Add(player);

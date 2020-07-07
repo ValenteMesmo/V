@@ -4,6 +4,7 @@
     {
         public const int Undefined = 0;
         public const int Block = 1;
+        public const int Player = 2;
     }
 
     public static class StopsWhenHitingBlocks

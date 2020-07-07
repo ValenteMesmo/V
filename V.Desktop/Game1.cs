@@ -8,7 +8,7 @@ namespace V.Desktop
         protected override void LoadContent()
         {
             base.LoadContent();            
-            Objects.Add(new WorldBuilder(this));            
+             WorldBuilder.Create();            
         }
     }
 }

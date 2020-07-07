@@ -18,6 +18,10 @@ namespace MonogameFacade
 
         public Action Update = null;
 
+        public override string ToString()
+        {
+            return Identifier.ToString();
+        }
 
         public static GameObject GetFromPool()
         {

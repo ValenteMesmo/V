@@ -17,14 +17,24 @@ namespace MonogameFacade
 
         private static Pool<SpriteRenderer> Pool = new Pool<SpriteRenderer>();
 
+        public SpriteRenderer()
+        {
+            Reset();
+        }
+
         public override void ReturnToPool()
+        {
+            Reset();
+            Pool.Return(this);
+        }
+
+        private void Reset()
         {
             Color = Color.White;
             Source = null;
             Target = Rectangle.Empty;
             Texture = null;
             Offset = Size = Point.Zero;
-            Pool.Return(this);
         }
 
         public static SpriteRenderer GetFromPool()

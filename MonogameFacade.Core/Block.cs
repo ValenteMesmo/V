@@ -9,6 +9,7 @@ namespace MonogameFacade
         public static GameObject Create()
         {
             var obj = GameObject.GetFromPool();
+            obj.Identifier = Identifier.Block;
 
             var sprite = SpriteRenderer.GetFromPool();
             sprite.Texture = Game.Instance.GetTexture("btn");
@@ -16,6 +17,7 @@ namespace MonogameFacade
             obj.Renderers.Add(sprite);
 
             var collider = Collider.GetFromPool();
+            collider.Parent = obj;
             collider.Area = new Rectangle(Point.Zero, sprite.Size);
             obj.Colliders.Add(collider);
 

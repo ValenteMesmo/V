@@ -52,13 +52,22 @@ namespace MonogameFacade
 
         private static Pool<TextRenderer> Pool = new Pool<TextRenderer>();
 
-        public override void ReturnToPool()
+        public TextRenderer()
         {
+            Reset();
+        }
 
+        private void Reset()
+        {
             Color = Color.Red;
             scale = 10;
             Offset = Point.Zero;
             Font = Game.Instance.Font;
+        }
+
+        public override void ReturnToPool()
+        {
+            Reset();            
             Pool.Return(this);
         }
 

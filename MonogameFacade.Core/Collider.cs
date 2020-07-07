@@ -69,25 +69,33 @@ namespace MonogameFacade
         public Action<Collider, Collider> BotCollisionHandler;
         public Action<Collider, Collider> RightCollisionHandler;
         //public Action<Collider> BeforeCollisionHandlers;
-        
+
 
         [Obsolete]
-        public Collider() { }
+        public Collider()
+        {
+            Reset();
+        }
 
         private static readonly Action<Collider, Collider> DefaultCollider = (a, b) => { };
 
         public void ReturnToPool()
         {
+            Reset();
+
+            Pool.Return(this);
+        }
+
+        private void Reset()
+        {
             Parent = null;
             Area = Rectangle.Empty;
             //Handler = CollisionHandler.Empty;
-            TopCollisionHandler = 
-                BotCollisionHandler = 
-                LeftCollisionHandler = 
-                RightCollisionHandler = 
+            TopCollisionHandler =
+                BotCollisionHandler =
+                LeftCollisionHandler =
+                RightCollisionHandler =
                 DefaultCollider;
-
-            Pool.Return(this);
         }
 
         public static Collider GetFromPool()

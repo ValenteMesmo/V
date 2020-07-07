@@ -20,6 +20,7 @@ namespace V
         {
             var obj = GameObject.GetFromPool();
             obj.IsPassive = false;
+            obj.Identifier = Identifier.Player;             
             var sprite = SpriteRenderer.GetFromPool();
 
             sprite.Color = Color.Cyan;
@@ -31,6 +32,7 @@ namespace V
 
             var collider = Collider.GetFromPool();
             collider.Area = new Rectangle(Point.Zero, sprite.Size);
+            collider.Parent = obj;
             collider.BotCollisionHandler = StopsWhenHitingBlocks.Bot;
             collider.TopCollisionHandler = StopsWhenHitingBlocks.Top;
             collider.LeftCollisionHandler = StopsWhenHitingBlocks.Left;

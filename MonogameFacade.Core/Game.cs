@@ -45,7 +45,7 @@ namespace MonogameFacade
             this.Camera = new Camera();
             this.GuiCamera = new Camera();
             MouseInput = new MouseInput();
-            Camera.Zoom = 1f;
+            Camera.Zoom = 0.01f;
             GuiCamera.Zoom = 1f;
 
             Objects = new List<GameObject>();
@@ -75,6 +75,11 @@ namespace MonogameFacade
 
             //for (int i = 0; i < targets.Length; i++)
             {
+#if DEBUG
+                if (source.Parent == null || target.Parent == null)
+                    throw new Exception("Collider parent cannot be null!");
+#endif
+
                 if (source.Parent == target.Parent)
                     return;
 
