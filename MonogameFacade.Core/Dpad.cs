@@ -27,23 +27,23 @@ namespace MonogameFacade
         public const int extraSize = 150;
         public const int Size = 160;
 
-        public static GameObject Create(GamePadData GamePadData)
+        public static GameObject Create(GamePadData GamePadData, Point initialLocation)
         {
             var obj = GameObject.GetFromPool();
-
-            //GamePadData.touchArea = new Rectangle(Location, new Point(Size, Size));
+            obj.Location = initialLocation;
+            GamePadData.touchArea = new Rectangle(obj.Location, new Point(Size, Size));
             //GamePadData.DpadCenter = Vector2.Zero;
             //GamePadData.PreviousDirection = GamePadDirection.None;
             //GamePadData.CurrentDirection = GamePadDirection.None;
-            //GamePadData.previousTouch =
-            //    GamePadData.DpadCenter =
-            //    GamePadData.touchArea.Center.ToVector2();
+            GamePadData.previousTouch =
+                GamePadData.DpadCenter =
+                GamePadData.touchArea.Center.ToVector2();
             GamePadData.Color = Color.White;
-            //GamePadData.touchArea = new Rectangle(
-            //    Location.X - (extraSize / 2)
-            //    , Location.Y - (extraSize / 2)
-            //    , Size + extraSize
-            //    , Size + extraSize);
+            GamePadData.touchArea = new Rectangle(
+                obj.Location.X - (extraSize / 2)
+                , obj.Location.Y - (extraSize / 2)
+                , Size + extraSize
+                , Size + extraSize);
 
 
             obj.Update = () => Update(GamePadData);
@@ -321,17 +321,16 @@ namespace MonogameFacade
             var data = new GamePadData();
             data.input = input;
 
-            var obj = BaseFourTouchanleButtons.Create(data);
-            obj.Location = new Point(-600, -320);
+            var obj = BaseFourTouchanleButtons.Create(data, new Point(-600, -320));
 
-            var sprite2 = new GuiSpriteRenderer();
+            var sprite2 = GuiSpriteRenderer.GetFromPool();
             sprite2.Texture = Game.Instance.GetTexture("btn");
             sprite2.Size = new Point(BaseFourTouchanleButtons.Size, BaseFourTouchanleButtons.Size);
             sprite2.Color = Color.DarkGray;
-            //Renderers.Add(sprite2);
+            //obj.Renderers.Add(sprite2);
 
 
-            var sprite = new GuiSpriteRenderer();
+            var sprite = GuiSpriteRenderer.GetFromPool();
             sprite.Texture = Game.Instance.GetTexture("shadedDark04");
             sprite.Size = new Point(BaseFourTouchanleButtons.Size, BaseFourTouchanleButtons.Size);
             //sprite.Offset = new Point(-1400, -750);
@@ -364,35 +363,33 @@ namespace MonogameFacade
         {
             var data = new GamePadData();
             data.input = input;
-            var obj = BaseFourTouchanleButtons.Create(data);
+            var obj = BaseFourTouchanleButtons.Create(data, new Point(430, -320));
 
-            obj.Location = new Point(430, -320);
-
-            var sprite = new GuiSpriteRenderer();
+            var sprite = GuiSpriteRenderer.GetFromPool();
             sprite.Texture = Game.Instance.GetTexture("btn");
             sprite.Size = new Point(BaseFourTouchanleButtons.Size, BaseFourTouchanleButtons.Size);
             sprite.Color = Color.DarkGray;
             //Renderers.Add(sprite);
 
-            var sprite1 = new GuiSpriteRenderer();
+            var sprite1 = GuiSpriteRenderer.GetFromPool();
             sprite1.Texture = Game.Instance.GetTexture("shadedDark39");
             sprite1.Offset = new Point(45, -10);
             sprite1.Size = new Point(buttonSize, buttonSize);
             obj.Renderers.Add(sprite1);
 
-            var sprite2 = new GuiSpriteRenderer();
+            var sprite2 = GuiSpriteRenderer.GetFromPool();
             sprite2.Texture = Game.Instance.GetTexture("shadedDark37");
             sprite2.Offset = new Point(100, 45);
             sprite2.Size = new Point(buttonSize, buttonSize);
             obj. Renderers.Add(sprite2);
 
-            var sprite3 = new GuiSpriteRenderer();
+            var sprite3 = GuiSpriteRenderer.GetFromPool();
             sprite3.Texture = Game.Instance.GetTexture("shadedDark36");
             sprite3.Offset = new Point(45, 100);
             sprite3.Size = new Point(buttonSize, buttonSize);
             obj.Renderers.Add(sprite3);
 
-            var sprite4 = new GuiSpriteRenderer();
+            var sprite4 = GuiSpriteRenderer.GetFromPool();
             sprite4.Texture = Game.Instance.GetTexture("shadedDark38");
             sprite4.Offset = new Point(-10, 45);
             sprite4.Size = new Point(buttonSize, buttonSize);

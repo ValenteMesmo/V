@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 
 namespace MonogameFacade
 {
@@ -69,9 +70,34 @@ namespace MonogameFacade
 
         public Point Offset;
         public Point Size;
+        private static Pool<GuiSpriteRenderer> Pool = new Pool<GuiSpriteRenderer>();
+
+
+        [Obsolete]
+        public GuiSpriteRenderer() : base()
+        {
+            Reset();
+        }
 
         public override void ReturnToPool()
         {
+            Reset();
+            Pool.Return(this);
+        }
+
+        public static GuiSpriteRenderer GetFromPool()
+        {
+            return Pool.Get();
+        }
+
+        private void Reset()
+        {
+            Color = Color.White;
+            Source = null;
+            Target = Rectangle.Empty;
+
+            Offset = Point.Zero;
+            Size = Point.Zero;
             Color = Color.White;
         }
 

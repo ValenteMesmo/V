@@ -42,10 +42,10 @@ namespace MonogameFacade
         {
             Instance = this;
             Vibrate = f => { };
-            this.Camera = new Camera();
-            this.GuiCamera = new Camera();
+            Camera = new Camera();
+            GuiCamera = new Camera();
             MouseInput = new MouseInput();
-            Camera.Zoom = 0.01f;
+            Camera.Zoom = 0.05f;
             GuiCamera.Zoom = 1f;
 
             Objects = new List<GameObject>();

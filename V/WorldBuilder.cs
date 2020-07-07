@@ -10,9 +10,9 @@ namespace V
     {
         public static void Create()
         {
-            var obj = GameObject.GetFromPool();
-            obj .Location = new Point(-1500, -1500);
             AddBlocks();
+
+            MonogameFacade.Game.Instance.Camera.Location = new Point(6800,3800);
 
             var inputTouch = new InputKeeper();
             var inputTouchAction = new InputKeeper();

@@ -12,16 +12,26 @@ namespace MonogameFacade
 
         private static Pool<GuiTextRenderer> Pool = new Pool<GuiTextRenderer>();
 
+        public GuiTextRenderer()
+        {
+            Reset();
+        }
+
         public override void ReturnToPool()
+        {
+            Reset();
+            Pool.Return(this);
+        }
+
+        private void Reset()
         {
             Font = Game.Instance.Font;
             Color = Color.Red;
             scale = 10;
-            Text = "";
-            Pool.Return(this);
+            Text = "";            
         }
 
-        public GuiTextRenderer GetFromPool()
+        public static GuiTextRenderer GetFromPool()
         {
             return Pool.Get();
         }
