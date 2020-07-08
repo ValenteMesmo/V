@@ -6,10 +6,10 @@ using Microsoft.Xna.Framework.Input.Touch;
 using System;
 using System.Collections.Generic;
 
+using OldGame = Microsoft.Xna.Framework.Game;
+
 namespace MonogameFacade
 {
-    using OldGame = Microsoft.Xna.Framework.Game;
-
     public abstract class Game : OldGame
     {
         public static Game Instance = null;
@@ -29,10 +29,12 @@ namespace MonogameFacade
         public readonly Camera GuiCamera = null;
 
         public SpriteFont Font = null;
+        private Texture2D pixel;
         public FrameCounter FrameCounter = null;
         public List<GameObject> Objects = null;
 
         private Dictionary<string, Texture2D> Textures = null;
+
         public Texture2D GetTexture(string name)
         {
             return this.Textures[name];
@@ -67,6 +69,14 @@ namespace MonogameFacade
 
             Font = Content.Load<SpriteFont>("font");
             Textures = LoadTextures(Content);
+            pixel = new Texture2D(GraphicsDevice, 1, 1);
+            pixel.SetData(new[] { Color.White });
+        }
+
+        protected override void UnloadContent()
+        {
+            base.UnloadContent();
+            pixel.Dispose();
         }
 
         private void CheckCollisions(CollisionDirection direction, Collider source, Collider target)
@@ -99,9 +109,7 @@ namespace MonogameFacade
                 currentObject = Objects[i];
                 currentObject.Update();
 
-                currentObject.Location.Y =
-                    currentObject.Location.Y
-                    + currentObject.Velocity.Y;
+                currentObject.Location.Y += currentObject.Velocity.Y;
 
                 if (!currentObject.IsPassive)
                     for (int j = 0; j < currentObject.Colliders.Count; j++)
@@ -117,9 +125,7 @@ namespace MonogameFacade
                                     , Objects[k].Colliders[l]);
                     }
 
-                currentObject.Location.X =
-                    currentObject.Location.X
-                    + currentObject.Velocity.X;
+                currentObject.Location.X += currentObject.Velocity.X;
                 if (!currentObject.IsPassive)
                     for (int j = 0; j < currentObject.Colliders.Count; j++)
                     {
@@ -226,9 +232,22 @@ namespace MonogameFacade
                             , spriteBatch
                             , Objects[i]);
 
+            for (int i = 0; i < Objects.Count; i++)
+                for (var j = 0; j < Objects[i].Renderers.Count; j++)
+                    for (int k = 0; k < Objects[i].Colliders.Count; k++)
+                        DrawBorder(Objects[i].Colliders[k].RelativeArea, 20, Color.Red, spriteBatch);
+
             spriteBatch.End();
             spriteBatchGui.End();
             base.Draw(gameTime);
+        }
+
+        private void DrawBorder(Rectangle rectangleToDraw, int thicknessOfBorder, Color borderColor, SpriteBatch spriteBatch)
+        {
+            spriteBatch.Draw(pixel, new Rectangle(rectangleToDraw.X, rectangleToDraw.Y, rectangleToDraw.Width, thicknessOfBorder), null, borderColor, 0, Vector2.Zero, SpriteEffects.None, 0);
+            spriteBatch.Draw(pixel, new Rectangle(rectangleToDraw.X, rectangleToDraw.Y, thicknessOfBorder, rectangleToDraw.Height), null, borderColor, 0, Vector2.Zero, SpriteEffects.None, 0);
+            spriteBatch.Draw(pixel, new Rectangle((rectangleToDraw.X + rectangleToDraw.Width - thicknessOfBorder), rectangleToDraw.Y, thicknessOfBorder, rectangleToDraw.Height), null, borderColor, 0, Vector2.Zero, SpriteEffects.None, 0);
+            spriteBatch.Draw(pixel, new Rectangle(rectangleToDraw.X, rectangleToDraw.Y + rectangleToDraw.Height - thicknessOfBorder, rectangleToDraw.Width, thicknessOfBorder), null, borderColor, 0, Vector2.Zero, SpriteEffects.None, 0);
         }
     }
 }

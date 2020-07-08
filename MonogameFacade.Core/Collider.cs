@@ -52,7 +52,7 @@ namespace MonogameFacade
 
     public class Collider
     {
-        private static Pool<Collider> Pool = new Pool<Collider>();
+        private static readonly Pool<Collider> Pool = new Pool<Collider>();
 
         public GameObject Parent = null;
         public Rectangle Area;
@@ -61,6 +61,13 @@ namespace MonogameFacade
         public int RelativeY => Parent.Location.Y + Area.Y;
         public int Width => Area.Width;
         public int Height => Area.Height;
+        public Rectangle RelativeArea =>
+            new Rectangle(
+                Area.X + Parent.Location.X
+                , Area.Y + Parent.Location.Y
+                , Area.Width
+                , Area.Height
+            );
 
         //public CollisionHandler Handler = CollisionHandler.Empty;
 

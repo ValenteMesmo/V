@@ -100,7 +100,6 @@ namespace MonogameFacade
         }
 
         private const int TouchVibration = 1;
-        private const int UntouchVibration = 1;
 
         private static GamePadDirection CalculateDpadDirection(GamePadData pad)
         {
@@ -317,8 +316,10 @@ namespace MonogameFacade
     {
         public static GameObject Create(InputKeeper input)
         {
-            var data = new GamePadData();
-            data.input = input;
+            var data = new GamePadData
+            {
+                input = input
+            };
 
             var obj = BaseTouchButtons.Create(data, new Point(-600, -320));
 
@@ -360,8 +361,10 @@ namespace MonogameFacade
 
         public static GameObject Create(InputKeeper input)
         {
-            var data = new GamePadData();
-            data.input = input;
+            var data = new GamePadData
+            {
+                input = input
+            };
             var obj = BaseTouchButtons.Create(data, new Point(430, -320));
 
             var sprite = GuiSpriteRenderer.GetFromPool();
