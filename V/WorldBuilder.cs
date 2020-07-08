@@ -20,10 +20,13 @@ namespace V
 
             var player = Player.Create(input, inputTouch, inputTouchAction);
             player.Location = new Point(1500, 500);
-            MonogameFacade.Game.Instance.Objects.Add(Dpad.Create(inputTouch));
-            MonogameFacade.Game.Instance.Objects.Add(ActionButtons.Create(inputTouchAction));
+            MonogameFacade.Game.Instance.Objects.Add(DirectionalTouchButtons.Create(inputTouch));
+            MonogameFacade.Game.Instance.Objects.Add(ActionTouchButtons.Create(inputTouchAction));
             MonogameFacade.Game.Instance.Objects.Add(player);
+
             MonogameFacade.Game.Instance.Objects.Add(FpsDisplay.Create());
+            MonogameFacade.Game.Instance.Objects.Add(Log.Create());
+
         }
 
         private static void AddBlocks()

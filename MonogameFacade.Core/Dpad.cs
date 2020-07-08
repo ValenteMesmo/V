@@ -9,7 +9,7 @@ namespace MonogameFacade
         None, Up, Down, Left, Right
     }
 
-    public struct GamePadData
+    public class GamePadData
     {
         public InputKeeper input;
         public Rectangle touchArea;
@@ -21,7 +21,7 @@ namespace MonogameFacade
         public Color Color;
     }
 
-    public static class BaseFourTouchanleButtons
+    public static class BaseTouchButtons
     {
         public const int minDistance = 30;
         public const int extraSize = 150;
@@ -56,6 +56,7 @@ namespace MonogameFacade
             pad.PreviousDirection = pad.CurrentDirection;
             pad.CurrentDirection = newDirection;
 
+            Log.Text = $"{pad.PreviousDirection} : {pad.CurrentDirection}";
             //TODO: introduce cooldown to prevent vibration on release when rapidly pressing
             if (pad.CurrentDirection != pad.PreviousDirection)
                 Game.Instance.Vibrate(TouchVibration);
@@ -312,27 +313,25 @@ namespace MonogameFacade
         }
     }
 
-    public static class Dpad
+    public static class DirectionalTouchButtons
     {
-        //public GuiSpriteRenderer sprite = null;
-
         public static GameObject Create(InputKeeper input)
         {
             var data = new GamePadData();
             data.input = input;
 
-            var obj = BaseFourTouchanleButtons.Create(data, new Point(-600, -320));
+            var obj = BaseTouchButtons.Create(data, new Point(-600, -320));
 
             var sprite2 = GuiSpriteRenderer.GetFromPool();
             sprite2.Texture = Game.Instance.GetTexture("btn");
-            sprite2.Size = new Point(BaseFourTouchanleButtons.Size, BaseFourTouchanleButtons.Size);
+            sprite2.Size = new Point(BaseTouchButtons.Size, BaseTouchButtons.Size);
             sprite2.Color = Color.DarkGray;
             //obj.Renderers.Add(sprite2);
 
 
             var sprite = GuiSpriteRenderer.GetFromPool();
             sprite.Texture = Game.Instance.GetTexture("shadedDark04");
-            sprite.Size = new Point(BaseFourTouchanleButtons.Size, BaseFourTouchanleButtons.Size);
+            sprite.Size = new Point(BaseTouchButtons.Size, BaseTouchButtons.Size);
             //sprite.Offset = new Point(-1400, -750);
             //sprite.Offset = new Point(-585, -300);
             //sprite.Offset = new Point(-350, -150);
@@ -341,13 +340,13 @@ namespace MonogameFacade
             data.touchArea = new Rectangle(obj.Location, sprite.Size); ;
             data.previousTouch = data.DpadCenter = data.touchArea.Center.ToVector2();
             data.touchArea = new Rectangle(
-                obj.Location.X - (BaseFourTouchanleButtons.extraSize / 2)
-                , obj.Location.Y - (BaseFourTouchanleButtons.extraSize / 2)
-                , sprite.Size.X + BaseFourTouchanleButtons.extraSize
-                , sprite.Size.Y + BaseFourTouchanleButtons.extraSize);
+                obj.Location.X - (BaseTouchButtons.extraSize / 2)
+                , obj.Location.Y - (BaseTouchButtons.extraSize / 2)
+                , sprite.Size.X + BaseTouchButtons.extraSize
+                , sprite.Size.Y + BaseTouchButtons.extraSize);
 
             sprite2.Size = data.touchArea.Size;
-            sprite2.Offset = new Point(-(BaseFourTouchanleButtons.extraSize / 2), -(BaseFourTouchanleButtons.extraSize / 2));
+            sprite2.Offset = new Point(-(BaseTouchButtons.extraSize / 2), -(BaseTouchButtons.extraSize / 2));
 
             return obj;
         }
@@ -355,7 +354,7 @@ namespace MonogameFacade
 
     }
 
-    public static class ActionButtons
+    public static class ActionTouchButtons
     {
         const int buttonSize = 70;
 
@@ -363,11 +362,11 @@ namespace MonogameFacade
         {
             var data = new GamePadData();
             data.input = input;
-            var obj = BaseFourTouchanleButtons.Create(data, new Point(430, -320));
+            var obj = BaseTouchButtons.Create(data, new Point(430, -320));
 
             var sprite = GuiSpriteRenderer.GetFromPool();
             sprite.Texture = Game.Instance.GetTexture("btn");
-            sprite.Size = new Point(BaseFourTouchanleButtons.Size, BaseFourTouchanleButtons.Size);
+            sprite.Size = new Point(BaseTouchButtons.Size, BaseTouchButtons.Size);
             sprite.Color = Color.DarkGray;
             //Renderers.Add(sprite);
 
@@ -395,16 +394,16 @@ namespace MonogameFacade
             sprite4.Size = new Point(buttonSize, buttonSize);
             obj. Renderers.Add(sprite4);
 
-            data.touchArea = new Rectangle(obj.Location, new Point(BaseFourTouchanleButtons.Size, BaseFourTouchanleButtons.Size));
+            data.touchArea = new Rectangle(obj.Location, new Point(BaseTouchButtons.Size, BaseTouchButtons.Size));
             data.previousTouch = data.DpadCenter = data.touchArea.Center.ToVector2();
             data.touchArea = new Rectangle(
-                obj.Location.X - (BaseFourTouchanleButtons.extraSize / 2)
-                , obj.Location.Y - (BaseFourTouchanleButtons.extraSize / 2)
-                , BaseFourTouchanleButtons.Size + BaseFourTouchanleButtons.extraSize
-                , BaseFourTouchanleButtons.Size + BaseFourTouchanleButtons.extraSize);
+                obj.Location.X - (BaseTouchButtons.extraSize / 2)
+                , obj.Location.Y - (BaseTouchButtons.extraSize / 2)
+                , BaseTouchButtons.Size + BaseTouchButtons.extraSize
+                , BaseTouchButtons.Size + BaseTouchButtons.extraSize);
 
             sprite.Size = data.touchArea.Size;
-            sprite.Offset = new Point(-(BaseFourTouchanleButtons.extraSize / 2), -(BaseFourTouchanleButtons.extraSize / 2));
+            sprite.Offset = new Point(-(BaseTouchButtons.extraSize / 2), -(BaseTouchButtons.extraSize / 2));
             return obj;
         }
     }
