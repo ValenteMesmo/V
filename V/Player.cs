@@ -35,7 +35,7 @@ namespace V
 
             var groundCheck = Collider.GetFromPool();
             groundCheck.Parent = obj;
-            groundCheck.Area = new Rectangle(0,100, sprite.Size.X, sprite.Size.Y);
+            groundCheck.Area = new Rectangle(0, sprite.Size.Y, sprite.Size.X, 200);
 
             groundCheck.BeforeCollisionHandler = () => grounded = false;
             groundCheck.BotCollisionHandler =
