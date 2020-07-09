@@ -116,7 +116,7 @@ namespace MonogameFacade
                     {
                         currentCollider = currentObject.Colliders[j];
 
-                        //currentCollider.BeforeCollisionHandlers;
+                        currentCollider.BeforeCollisionHandler();
                         for (int k = 0; k < Objects.Count; k++)
                             for (int l = 0; l < Objects[k].Colliders.Count; l++)
                                 CheckCollisions(
@@ -131,7 +131,7 @@ namespace MonogameFacade
                     {
                         currentCollider = currentObject.Colliders[j];
 
-                        //currentCollider.BeforeCollisionHandlers();
+                        currentCollider.BeforeCollisionHandler();
                         for (int k = 0; k < Objects.Count; k++)
                             for (int l = 0; l < Objects[k].Colliders.Count; l++)
                                 CheckCollisions(

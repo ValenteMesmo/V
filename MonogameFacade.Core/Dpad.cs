@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using MonogameFacade.Core.Systems;
 using System;
 
 namespace MonogameFacade
@@ -32,9 +31,6 @@ namespace MonogameFacade
             var obj = GameObject.GetFromPool();
             obj.Location = initialLocation;
             GamePadData.touchArea = new Rectangle(obj.Location, new Point(Size, Size));
-            //GamePadData.DpadCenter = Vector2.Zero;
-            //GamePadData.PreviousDirection = GamePadDirection.None;
-            //GamePadData.CurrentDirection = GamePadDirection.None;
             GamePadData.previousTouch =
                 GamePadData.DpadCenter =
                 GamePadData.touchArea.Center.ToVector2();
@@ -45,8 +41,6 @@ namespace MonogameFacade
                 , Size + extraSize
                 , Size + extraSize);
 
-
-            obj.Update = () => Update(GamePadData);
             return obj;
         }
 
@@ -56,7 +50,6 @@ namespace MonogameFacade
             pad.PreviousDirection = pad.CurrentDirection;
             pad.CurrentDirection = newDirection;
 
-            Log.Text = $"{pad.PreviousDirection} : {pad.CurrentDirection}";
             //TODO: introduce cooldown to prevent vibration on release when rapidly pressing
             if (pad.CurrentDirection != pad.PreviousDirection)
                 Game.Instance.Vibrate(TouchVibration);
@@ -93,10 +86,10 @@ namespace MonogameFacade
             , bool left = false
             , bool right = false)
         {
-            input.Up = up;
-            input.Down = down;
-            input.Left = left;
-            input.Right = right;
+            input.Up = input.Up || up;
+            input.Down = input.Down || down;
+            input.Left = input.Left || left;
+            input.Right = input.Right || right;
         }
 
         private const int TouchVibration = 1;
@@ -314,13 +307,8 @@ namespace MonogameFacade
 
     public static class DirectionalTouchButtons
     {
-        public static GameObject Create(InputKeeper input)
+        public static GameObject Create(GamePadData data)
         {
-            var data = new GamePadData
-            {
-                input = input
-            };
-
             var obj = BaseTouchButtons.Create(data, new Point(-600, -320));
 
             var sprite2 = GuiSpriteRenderer.GetFromPool();
@@ -359,12 +347,8 @@ namespace MonogameFacade
     {
         const int buttonSize = 70;
 
-        public static GameObject Create(InputKeeper input)
+        public static GameObject Create(GamePadData data)
         {
-            var data = new GamePadData
-            {
-                input = input
-            };
             var obj = BaseTouchButtons.Create(data, new Point(430, -320));
 
             var sprite = GuiSpriteRenderer.GetFromPool();
@@ -383,7 +367,7 @@ namespace MonogameFacade
             sprite2.Texture = Game.Instance.GetTexture("shadedDark37");
             sprite2.Offset = new Point(100, 45);
             sprite2.Size = new Point(buttonSize, buttonSize);
-            obj. Renderers.Add(sprite2);
+            obj.Renderers.Add(sprite2);
 
             var sprite3 = GuiSpriteRenderer.GetFromPool();
             sprite3.Texture = Game.Instance.GetTexture("shadedDark36");
@@ -395,7 +379,7 @@ namespace MonogameFacade
             sprite4.Texture = Game.Instance.GetTexture("shadedDark38");
             sprite4.Offset = new Point(-10, 45);
             sprite4.Size = new Point(buttonSize, buttonSize);
-            obj. Renderers.Add(sprite4);
+            obj.Renderers.Add(sprite4);
 
             data.touchArea = new Rectangle(obj.Location, new Point(BaseTouchButtons.Size, BaseTouchButtons.Size));
             data.previousTouch = data.DpadCenter = data.touchArea.Center.ToVector2();

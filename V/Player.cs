@@ -6,27 +6,19 @@ namespace V
 {
     public static class Player
     {
-        //private SpriteRenderer sprite = null;
-        //private Collider collider = null;
-        //public InputKeeper input ;
-        //public InputKeeper inputTouch ;
-        //public InputKeeper inputTouchAction ;
-
         public static GameObject Create(
-            InputKeeper input
-            , InputKeeper inputTouch
-            , InputKeeper inputTouchAction
+            GamePadData inputDirection
+            , GamePadData inputAction
         )
         {
             var obj = GameObject.GetFromPool();
             obj.IsPassive = false;
-            obj.Identifier = Identifier.Player;             
+            obj.Identifier = Identifier.Player;
             var sprite = SpriteRenderer.GetFromPool();
 
             sprite.Color = Color.Cyan;
             sprite.Texture = MonogameFacade.Game.Instance.GetTexture("btn");
             sprite.Size = new Point(1000, 1000);
-
 
             obj.Renderers.Add(sprite);
 
@@ -39,21 +31,40 @@ namespace V
             collider.RightCollisionHandler = StopsWhenHitingBlocks.Right;
             obj.Colliders.Add(collider);
 
-            obj.Update = () => Update(obj, input, inputTouch, inputTouchAction);
+            var grounded = false;
+
+            var groundCheck = Collider.GetFromPool();
+            groundCheck.Parent = obj;
+            groundCheck.Area = new Rectangle(0,100, sprite.Size.X, sprite.Size.Y);
+
+            groundCheck.BeforeCollisionHandler = () => grounded = false;
+            groundCheck.BotCollisionHandler =
+                groundCheck.TopCollisionHandler =
+                groundCheck.LeftCollisionHandler =
+                groundCheck.RightCollisionHandler =
+                (source, target) =>
+                {
+                    if (target.Parent.Identifier == Identifier.Block)
+                        grounded = true;
+                };
+            obj.Colliders.Add(groundCheck);
+
+            obj.Update = () =>
+            {
+                InputKeeperClear.Update(inputDirection.input);
+                InputKeeperClear.Update(inputAction.input);
+
+                BaseTouchButtons.Update(inputAction);
+                BaseTouchButtons.Update(inputDirection);
+                KeyboardInput.Update(inputDirection.input, inputAction.input);
+                GameControllerInput.Update(inputDirection.input, inputAction.input);
+
+                HorizontalMovement.Update(obj, inputDirection.input);
+                JumpsUsingInput.Update(obj, inputAction.input, grounded);
+                Gravity.Apply(obj);
+            };
 
             return obj;
-        }
-
-        public static void Update(
-            GameObject obj
-            , InputKeeper input
-            , InputKeeper inputTouch
-            , InputKeeper inputTouchAction)
-        {
-            SetInputUsingKeyboard.Update(input);
-            MovesUsingKeyboard.Update(obj, input, inputTouch);
-            JumpsUsingInput.Update(obj, inputTouchAction);
-            Gravity.Apply(obj);
         }
     }
 }

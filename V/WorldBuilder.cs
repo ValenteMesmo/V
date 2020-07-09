@@ -1,8 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using MonogameFacade;
-using MonogameFacade.Core.Systems;
-using System;
-using System.Collections.Generic;
 
 namespace V
 {
@@ -12,20 +9,21 @@ namespace V
         {
             AddBlocks();
 
-            MonogameFacade.Game.Instance.Camera.Location = new Point(6800,3800);
+            MonogameFacade.Game.Instance.Camera.Location = new Point(6800, 3800);
 
-            var inputTouch = new InputKeeper();
-            var inputTouchAction = new InputKeeper();
-            var input = new InputKeeper();
+            var inputAction = new GamePadData { input =new InputKeeper() };
+            var inputDirection = new GamePadData { input = new InputKeeper() };
 
-            var player = Player.Create(input, inputTouch, inputTouchAction);
+            var player = Player.Create(inputDirection, inputAction);
             player.Location = new Point(1500, 500);
-            MonogameFacade.Game.Instance.Objects.Add(DirectionalTouchButtons.Create(inputTouch));
-            MonogameFacade.Game.Instance.Objects.Add(ActionTouchButtons.Create(inputTouchAction));
+
+            MonogameFacade.Game.Instance.Objects.Add(Log.Create());
+
+            MonogameFacade.Game.Instance.Objects.Add(DirectionalTouchButtons.Create(inputDirection));
+            MonogameFacade.Game.Instance.Objects.Add(ActionTouchButtons.Create(inputAction));
             MonogameFacade.Game.Instance.Objects.Add(player);
 
             MonogameFacade.Game.Instance.Objects.Add(FpsDisplay.Create());
-            MonogameFacade.Game.Instance.Objects.Add(Log.Create());
 
         }
 
@@ -40,8 +38,8 @@ namespace V
         private static void AddBlock(int i, int j)
         {
             var block = Block.Create();            
-            block.Location.X = block.Location.X + i * Block.Size;
-            block.Location.Y = block.Location.Y + j * Block.Size;
+            block.Location.X += i * Block.Size;
+            block.Location.Y += j * Block.Size;
             MonogameFacade.Game.Instance.Objects.Add(block);
         }
     }

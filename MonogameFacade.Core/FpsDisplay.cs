@@ -4,12 +4,14 @@ namespace MonogameFacade
 {
     public static class Log
     {
-        public static string Text = "";
+        public static string Text { get => text.Text; set => text.Text = value; }
+
+        private static GuiTextRenderer text;
         public static GameObject Create()
         {
             var obj = GameObject.GetFromPool();
             obj.Location = new Point(-350, 0);
-            var text = GuiTextRenderer.GetFromPool();
+            text = GuiTextRenderer.GetFromPool();
             obj.Renderers.Add(text);
 
             obj.Update = () => Update(obj, text);
@@ -19,7 +21,7 @@ namespace MonogameFacade
 
         public static void Update(GameObject obj, GuiTextRenderer text)
         {
-            text.Text = Text;
+            text.Text = "";
         }
     }
 

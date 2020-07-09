@@ -75,7 +75,7 @@ namespace MonogameFacade
         public Action<Collider, Collider> LeftCollisionHandler;
         public Action<Collider, Collider> BotCollisionHandler;
         public Action<Collider, Collider> RightCollisionHandler;
-        //public Action<Collider> BeforeCollisionHandlers;
+        public Action BeforeCollisionHandler;
 
 
         [Obsolete]
@@ -84,7 +84,8 @@ namespace MonogameFacade
             Reset();
         }
 
-        private static readonly Action<Collider, Collider> DefaultCollider = (a, b) => { };
+        private static readonly Action<Collider, Collider> DefaultCollision = (a, b) => { };
+        private static readonly Action DefaultBeforeCollision = () => { };
 
         public void ReturnToPool()
         {
@@ -97,12 +98,14 @@ namespace MonogameFacade
         {
             Parent = null;
             Area = Rectangle.Empty;
-            //Handler = CollisionHandler.Empty;
+
+            BeforeCollisionHandler = DefaultBeforeCollision;
+
             TopCollisionHandler =
                 BotCollisionHandler =
                 LeftCollisionHandler =
                 RightCollisionHandler =
-                DefaultCollider;
+                DefaultCollision;
         }
 
         public static Collider GetFromPool()
