@@ -1,7 +1,5 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
+﻿using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -54,29 +52,6 @@ namespace MonogameFacade
             }
 
             return result;
-        }
-        //DateTime currentUpdate;
-        //double delta;
-        protected override void Update(GameTime gameTime)
-        {
-            //currentUpdate = DateTime.Now;
-            //delta = (currentUpdate - previousUpdate).TotalSeconds;
-            //if (delta > 0.25)
-            //    delta = 0.25;
-            //previousUpdate = currentUpdate;
-
-            //accumulator = accumulator + delta;
-            accumulator = accumulator + gameTime.ElapsedGameTime.TotalSeconds;
-
-            if (accumulator >= dt)
-            {
-                base.Update(gameTime);
-                accumulator = accumulator - dt;
-            }
-            else
-                SuppressDraw();
-
-            FrameCounter.Update(accumulator);
         }
     }
 }

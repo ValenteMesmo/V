@@ -12,6 +12,9 @@ namespace MonogameFacade
 {
     public abstract class Game : OldGame
     {
+        private const double frameRate = 0.01666666666;
+        private double accumulator;
+
         public static Game Instance = null;
 
         public Action<long> Vibrate = null;
@@ -58,6 +61,10 @@ namespace MonogameFacade
             Content.RootDirectory = "Content";
             Touches = new List<Vector2>();
             TouchesUi = new List<Vector2>();
+
+            IsFixedTimeStep = false;
+            graphics.SynchronizeWithVerticalRetrace = false;
+            InactiveSleepTime = new TimeSpan(0);
         }
 
         protected abstract Dictionary<string, Texture2D> LoadTextures(ContentManager Content);
@@ -100,7 +107,7 @@ namespace MonogameFacade
             }
         }
 
-        protected override void Update(GameTime gameTime)
+        private void ActualUpdate()
         {
             UpdateTouchsAndClicks();
 
@@ -144,6 +151,33 @@ namespace MonogameFacade
             //Camera.Update(GraphicsDevice);
             //GuiCamera.Update(GraphicsDevice);
         }
+
+        protected override void Update(GameTime gameTime)
+        {
+            previousUpdate = currentUpdate;
+            currentUpdate = DateTime.Now;
+            delta = (currentUpdate - previousUpdate).TotalSeconds;
+            if (delta > 0.25)
+                delta = 0.25;
+
+            accumulator += delta;
+
+            if (accumulator >= frameRate)
+            {
+                FrameCounter.Update(accumulator);
+                while (accumulator >= frameRate)
+                {
+                    ActualUpdate();
+                    accumulator -= frameRate;
+                }
+            }
+            else
+                SuppressDraw();
+        }
+
+        private DateTime previousUpdate;
+        private DateTime currentUpdate;
+        private double delta;
 
         private void UpdateTouchsAndClicks()
         {

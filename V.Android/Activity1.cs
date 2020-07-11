@@ -64,11 +64,11 @@ namespace V.Android
 
             Window.AddFlags(WindowManagerFlags.Fullscreen);
 
-            //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
-            //{
-            Window.Attributes.LayoutInDisplayCutoutMode =
+            if (Build.VERSION.SdkInt >= BuildVersionCodes.P)
+            {
+                Window.Attributes.LayoutInDisplayCutoutMode =
                 LayoutInDisplayCutoutMode.ShortEdges;
-            //}
+            }
 
             SetContentView(view);
         }

@@ -16,15 +16,7 @@ namespace MonogameFacade
         {
             this.assets = assets;
         }
-
-        protected override void Draw(GameTime gameTime)
-        {
-            FrameCounter.Update(
-                gameTime.ElapsedGameTime.TotalSeconds);
-
-            base.Draw(gameTime);
-        }
-
+            
         protected override void LoadContent()
         {
             base.LoadContent();
