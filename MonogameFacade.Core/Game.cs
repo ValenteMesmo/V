@@ -38,6 +38,11 @@ namespace MonogameFacade
 
         private Dictionary<string, Texture2D> Textures = null;
 
+        private DateTime previousUpdate;
+        private DateTime currentUpdate;
+        private DateTime actualCurrentUpdate;
+        private double delta;
+
         public Texture2D GetTexture(string name)
         {
             return this.Textures[name];
@@ -164,7 +169,9 @@ namespace MonogameFacade
 
             if (accumulator >= frameRate)
             {
-                FrameCounter.Update(accumulator);
+                FrameCounter.Update((currentUpdate - actualCurrentUpdate).TotalSeconds);
+                actualCurrentUpdate = currentUpdate;
+
                 while (accumulator >= frameRate)
                 {
                     ActualUpdate();
@@ -174,10 +181,6 @@ namespace MonogameFacade
             else
                 SuppressDraw();
         }
-
-        private DateTime previousUpdate;
-        private DateTime currentUpdate;
-        private double delta;
 
         private void UpdateTouchsAndClicks()
         {
