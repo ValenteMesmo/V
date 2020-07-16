@@ -34,14 +34,14 @@ namespace MonogameFacade
             var text = GuiTextRenderer.GetFromPool();
             obj.Renderers.Add(text);
 
-            obj.Update = () => Update(obj, text);
+            obj.Update = () => Update(text, Game.Instance.CurrentFramesPerSecond);
 
             return obj;
         }
 
-        public static void Update(GameObject obj, GuiTextRenderer text)
+        public static void Update(GuiTextRenderer text, double fps)
         {
-            text.Text = ((int)Game.Instance.FrameCounter.CurrentFramesPerSecond).ToString();
+            text.Text = ((int)fps).ToString();
         }
     }
 }

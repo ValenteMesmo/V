@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
+using System.Collections.Generic;
 
 namespace MonogameFacade
 {
@@ -46,7 +47,7 @@ namespace MonogameFacade
 
         public static void Update(GamePadData pad)
         {
-            var newDirection = CalculateDpadDirection(pad);
+            var newDirection = CalculateDpadDirection(pad, Game.Instance.TouchesUi);
             pad.PreviousDirection = pad.CurrentDirection;
             pad.CurrentDirection = newDirection;
 
@@ -94,20 +95,20 @@ namespace MonogameFacade
 
         private const int TouchVibration = 1;
 
-        private static GamePadDirection CalculateDpadDirection(GamePadData pad)
+        private static GamePadDirection CalculateDpadDirection(GamePadData pad, List<Vector2> TouchesUi)
         {
-            for (int i = 0; i < Game.Instance.TouchesUi.Count; i++)
-                if (pad.touchArea.Contains(Game.Instance.TouchesUi[i]))
+            for (int i = 0; i < TouchesUi.Count; i++)
+                if (pad.touchArea.Contains(TouchesUi[i]))
                     if (pad.PreviousDirection == GamePadDirection.Right)
-                        return CalculationsFromTheRight(Game.Instance.TouchesUi[i], pad.previousTouch);
+                        return CalculationsFromTheRight(TouchesUi[i], pad.previousTouch);
                     else if (pad.PreviousDirection == GamePadDirection.Left)
-                        return CalculationsFromTheLeft(Game.Instance.TouchesUi[i], pad.previousTouch);
+                        return CalculationsFromTheLeft(TouchesUi[i], pad.previousTouch);
                     else if (pad.PreviousDirection == GamePadDirection.Up)
-                        return CalculationsFromUp(Game.Instance.TouchesUi[i], pad.previousTouch);
+                        return CalculationsFromUp(TouchesUi[i], pad.previousTouch);
                     else if (pad.PreviousDirection == GamePadDirection.Down)
-                        return CalculationsFromDown(Game.Instance.TouchesUi[i], pad.previousTouch);
+                        return CalculationsFromDown(TouchesUi[i], pad.previousTouch);
                     else
-                        return CalculationsFromNone(Game.Instance.TouchesUi[i], pad.previousTouch);
+                        return CalculationsFromNone(TouchesUi[i], pad.previousTouch);
 
             return GamePadDirection.None;
         }

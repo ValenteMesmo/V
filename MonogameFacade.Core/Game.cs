@@ -10,16 +10,29 @@ using OldGame = Microsoft.Xna.Framework.Game;
 
 namespace MonogameFacade
 {
-    public abstract class Game : OldGame
+    public interface IGame
+    {
+        Action<long> Vibrate { get; }
+        Texture2D GetTexture(string name);
+        double CurrentFramesPerSecond { get; }
+        SpriteFont Font { get; }
+        List<GameObject> Objects { get; }
+        Camera Camera { get; }
+        Camera GuiCamera { get; }
+
+        List<Vector2> TouchesUi { get; }
+    }
+
+    public abstract class Game : OldGame, IGame
     {
         private const double frameRate = 0.01666666666;
         private double accumulator;
 
-        public static Game Instance = null;
+        public static IGame Instance = null;
 
-        public Action<long> Vibrate = null;
-        public List<Vector2> Touches = null;
-        public List<Vector2> TouchesUi = null;
+        public Action<long> Vibrate { get; set; }
+        public List<Vector2> Touches { get; set; }
+        public List<Vector2> TouchesUi { get; set; }
         private GameObject currentObject = null;
         private Collider currentCollider = null;
         public GraphicsDeviceManager graphics = null;
@@ -28,13 +41,14 @@ namespace MonogameFacade
 
         public MouseInput MouseInput = null;
 
-        public readonly Camera Camera = null;
-        public readonly Camera GuiCamera = null;
+        public Camera Camera { get;  }
+        public Camera GuiCamera { get; }
 
-        public SpriteFont Font = null;
+        public SpriteFont Font { get; set; }
         private Texture2D pixel;
         public FrameCounter FrameCounter = null;
-        public List<GameObject> Objects = null;
+        public double CurrentFramesPerSecond => FrameCounter.CurrentFramesPerSecond;
+        public List<GameObject> Objects { get; }
 
         private Dictionary<string, Texture2D> Textures = null;
 
