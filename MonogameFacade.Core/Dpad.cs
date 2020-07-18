@@ -13,18 +13,17 @@ namespace MonogameFacade
     {
         public InputKeeper input;
         public Rectangle touchArea;
-        public Vector2 delta;
+        public Point delta;
         public GamePadDirection CurrentDirection;
         public GamePadDirection PreviousDirection;
-        public Vector2 DpadCenter;
-        public Vector2 previousTouch;
+        public GamePadDirection PreviousDirectionNotNone;
         public Color Color;
     }
 
     public static class BaseTouchButtons
     {
         public const int minDistance = 30;
-        public const int extraSize = 150;
+        public const int extraSize = 80;
         public const int Size = 160;
 
         public static GameObject Create(GamePadData GamePadData, Point initialLocation)
@@ -32,9 +31,6 @@ namespace MonogameFacade
             var obj = GameObject.GetFromPool();
             obj.Location = initialLocation;
             GamePadData.touchArea = new Rectangle(obj.Location, new Point(Size, Size));
-            GamePadData.previousTouch =
-                GamePadData.DpadCenter =
-                GamePadData.touchArea.Center.ToVector2();
             GamePadData.Color = Color.White;
             GamePadData.touchArea = new Rectangle(
                 obj.Location.X - (extraSize / 2)
@@ -47,9 +43,12 @@ namespace MonogameFacade
 
         public static void Update(GamePadData pad)
         {
-            var newDirection = CalculateDpadDirection(pad, Game.Instance.TouchesUi);
+            if (pad.CurrentDirection != GamePadDirection.None)
+                pad.PreviousDirectionNotNone = pad.CurrentDirection;
+
             pad.PreviousDirection = pad.CurrentDirection;
-            pad.CurrentDirection = newDirection;
+
+            pad.CurrentDirection = CalculateDpadDirection(pad, Game.Instance.TouchesUi);
 
             //TODO: introduce cooldown to prevent vibration on release when rapidly pressing
             if (pad.CurrentDirection != pad.PreviousDirection)
@@ -95,214 +94,194 @@ namespace MonogameFacade
 
         private const int TouchVibration = 1;
 
-        private static GamePadDirection CalculateDpadDirection(GamePadData pad, List<Vector2> TouchesUi)
+        public const int minVerticalOnSlide = 15;
+        public const int minVerticalOnPress = 33;
+        public const int minHorizontalOnSlide = 15;
+        public const int minHorizontalOnPress = 33;
+
+        private static GamePadDirection CalculateDpadDirection(GamePadData pad, List<Point> TouchesUi)
         {
             for (int i = 0; i < TouchesUi.Count; i++)
                 if (pad.touchArea.Contains(TouchesUi[i]))
-                    if (pad.PreviousDirection == GamePadDirection.Right)
-                        return CalculationsFromTheRight(TouchesUi[i], pad.previousTouch);
-                    else if (pad.PreviousDirection == GamePadDirection.Left)
-                        return CalculationsFromTheLeft(TouchesUi[i], pad.previousTouch);
-                    else if (pad.PreviousDirection == GamePadDirection.Up)
-                        return CalculationsFromUp(TouchesUi[i], pad.previousTouch);
-                    else if (pad.PreviousDirection == GamePadDirection.Down)
-                        return CalculationsFromDown(TouchesUi[i], pad.previousTouch);
+                {
+                    var delta = pad.touchArea.Center - TouchesUi[i];
+
+                    var left = delta.X > 0 ? Math.Abs(delta.X) : 0;
+                    var right = delta.X < 0 ? Math.Abs(delta.X) : 0;
+                    var up = delta.Y > 0 ? Math.Abs(delta.Y) : 0;
+                    var down = delta.Y < 0 ? Math.Abs(delta.Y) : 0;
+
+                    if (pad.PreviousDirection == GamePadDirection.None)
+                    {
+                        if (left < minHorizontalOnSlide)
+                            left = 0;
+
+                        if (right < minHorizontalOnSlide)
+                            right = 0;
+
+                        if (up < minVerticalOnSlide)
+                            up = 0;
+
+                        if (down < minVerticalOnSlide)
+                            down = 0;
+                    }
                     else
-                        return CalculationsFromNone(TouchesUi[i], pad.previousTouch);
+                    {
+                        if (left < minHorizontalOnPress)
+                            left = 0;
+
+                        if (right < minHorizontalOnPress)
+                            right = 0;
+
+                        if (up < minVerticalOnPress)
+                            up = 0;
+
+                        if (down < minVerticalOnPress)
+                            down = 0;
+                    }
+
+                    if (pad.PreviousDirection == GamePadDirection.Right)
+                        return CalculateSlideFromTheRight(pad.PreviousDirectionNotNone, left, right, up, down);
+                    else if (pad.PreviousDirection == GamePadDirection.Left)
+                        return CalculateSlideFromTheLeft(pad.PreviousDirectionNotNone,left, right, up, down);
+                    else if (pad.PreviousDirection == GamePadDirection.Up)
+                        return CalculateSlideFromUp(pad.PreviousDirectionNotNone,left, right, up, down);
+                    else if (pad.PreviousDirection == GamePadDirection.Down)
+                        return CalculateSlideFromDown(pad.PreviousDirectionNotNone,left, right, up, down);
+                    else
+                        return CalculatePressStart(pad.PreviousDirectionNotNone, left, right, up, down);
+                }
 
             return GamePadDirection.None;
         }
 
-        private static GamePadDirection CalculationsFromTheRight(Vector2 touch, Vector2 previousTouch)
+        private static GamePadDirection CalculateSlideFromTheRight(GamePadDirection PreviousDirectionNotNone, int left, int right, int up, int down)
         {
-            var delta = previousTouch - touch;
-            var distanceXAbs = Math.Abs(delta.X);
-            var distanceYAbs = Math.Abs(delta.Y);
+            if (up > 0 && right > 0)
+                return PreviousDirectionNotNone;
 
-            var fingerWentLeft =
-                distanceXAbs > minDistance
-                && distanceXAbs > distanceYAbs
-                && delta.X > 0;
+            if (down > 0 && right > 0)
+                return PreviousDirectionNotNone;
 
-            var fingerWentDown =
-                distanceYAbs > minDistance
-                && distanceXAbs < distanceYAbs
-                && delta.Y < 0;
-
-            var fingerWentUp =
-                distanceYAbs > minDistance
-                && distanceXAbs < distanceYAbs
-                && delta.Y > 0;
-
-            if (fingerWentLeft)
-                if (fingerWentUp)
-                    return GamePadDirection.Up;
-                else if (fingerWentDown)
-                    return GamePadDirection.Down;
-                else
-                    return GamePadDirection.Left;
-            else if (fingerWentUp)
+            if (up > 0)
                 return GamePadDirection.Up;
-            else if (fingerWentDown)
+            if (down > 0)
                 return GamePadDirection.Down;
-            else
-                return GamePadDirection.Right;
-        }
-
-        private static GamePadDirection CalculationsFromTheLeft(Vector2 touch, Vector2 previousTouch)
-        {
-            var delta = previousTouch - touch;
-            var distanceXAbs = Math.Abs(delta.X);
-            var distanceYAbs = Math.Abs(delta.Y);
-
-            var fingerWentRight =
-                distanceXAbs > minDistance
-                && distanceXAbs > distanceYAbs
-                && delta.X < 0;
-
-            var fingerWentDown =
-                distanceYAbs > minDistance
-                && distanceXAbs < distanceYAbs
-                && delta.Y < 0;
-
-            var fingerWentUp =
-                distanceYAbs > minDistance
-                && distanceXAbs < distanceYAbs
-                && delta.Y > 0;
-
-            if (fingerWentRight)
-                if (fingerWentUp)
-                    return GamePadDirection.Up;
-                else if (fingerWentDown)
-                    return GamePadDirection.Down;
-                else
-                    return GamePadDirection.Right;
-            else if (fingerWentUp)
-                return GamePadDirection.Up;
-            else if (fingerWentDown)
-                return GamePadDirection.Down;
-            else
+            if (left > 0)
                 return GamePadDirection.Left;
+            return GamePadDirection.Right;
         }
 
-        private static GamePadDirection CalculationsFromUp(Vector2 touch, Vector2 previousTouch)
+        private static GamePadDirection CalculateSlideFromTheLeft(GamePadDirection PreviousDirectionNotNone, int left, int right, int up, int down)
         {
-            var delta = previousTouch - touch;
-            var distanceXAbs = Math.Abs(delta.X);
-            var distanceYAbs = Math.Abs(delta.Y);
+            if (up > 0 && left > 0)
+                return PreviousDirectionNotNone;
 
-            var fingerWentRight =
-                distanceXAbs > minDistance
-                && distanceXAbs > distanceYAbs
-                && delta.X < 0;
+            if (down > 0 && left > 0)
+                return PreviousDirectionNotNone;
 
-            var fingerWentLeft =
-                distanceXAbs > minDistance
-                && distanceXAbs > distanceYAbs
-                && delta.X > 0;
-
-            var fingerWentDown =
-                distanceYAbs > minDistance
-                && distanceXAbs < distanceYAbs
-                && delta.Y < 0;
-
-            if (fingerWentDown)
-                if (fingerWentRight)
-                    return GamePadDirection.Right;
-                else if (fingerWentLeft)
-                    return GamePadDirection.Left;
-                else
-                    return GamePadDirection.Down;
-            else if (fingerWentLeft)
-                return GamePadDirection.Left;
-            else if (fingerWentRight)
-                return GamePadDirection.Right;
-            else
+            if (up > 0)
                 return GamePadDirection.Up;
-        }
-
-        private static GamePadDirection CalculationsFromDown(Vector2 touch, Vector2 previousTouch)
-        {
-            var delta = previousTouch - touch;
-            var distanceXAbs = Math.Abs(delta.X);
-            var distanceYAbs = Math.Abs(delta.Y);
-
-            var fingerWentRight =
-                distanceXAbs > minDistance
-                && distanceXAbs > distanceYAbs
-                && delta.X < 0;
-
-            var fingerWentLeft =
-                distanceXAbs > minDistance
-                && distanceXAbs > distanceYAbs
-                && delta.X > 0;
-
-            var fingerWentUp =
-                distanceYAbs > minDistance
-                && distanceXAbs < distanceYAbs
-                && delta.Y > 0;
-
-            if (fingerWentUp)
-                if (fingerWentRight)
-                    return GamePadDirection.Right;
-                else if (fingerWentLeft)
-                    return GamePadDirection.Left;
-                else
-                    return GamePadDirection.Up;
-            else if (fingerWentRight)
+            if (down > 0)
+                return GamePadDirection.Down;
+            if (right > 0)
                 return GamePadDirection.Right;
-            else if (fingerWentLeft)
-                return GamePadDirection.Left;
-            else
-                return GamePadDirection.Down;
+            return GamePadDirection.Left;
         }
 
-        private static GamePadDirection CalculationsFromNone(Vector2 touch, Vector2 previousTouch)
+        private static GamePadDirection CalculateSlideFromUp(GamePadDirection PreviousDirectionNotNone, int left, int right, int up, int down)
         {
-            var delta = previousTouch - touch;
-            var distanceXAbs = Math.Abs(delta.X);
-            var distanceYAbs = Math.Abs(delta.Y);
+            if (left > 0 && up > 0)
+                return PreviousDirectionNotNone;
 
-            var fingerWentRight =
-                distanceXAbs > minDistance
-                && distanceXAbs > distanceYAbs
-                && delta.X < 0;
+            if (right > 0 && up > 0 )
+                return PreviousDirectionNotNone;
 
-            var fingerWentLeft =
-                distanceXAbs > minDistance
-                && distanceXAbs > distanceYAbs
-                && delta.X > 0;
+            if (left > right)
+                return GamePadDirection.Left;
 
-            var fingerWentDown =
-                distanceYAbs > minDistance
-                && distanceXAbs < distanceYAbs
-                && delta.Y < 0;
+            if (right > left)
+                return GamePadDirection.Right;
 
-            var fingerWentUp =
-                distanceYAbs > minDistance
-                && distanceXAbs < distanceYAbs
-                && delta.Y > 0;
+            if (down > 0)
+                return GamePadDirection.Down;
 
-            if (fingerWentRight)
-                if (fingerWentUp)
+            return GamePadDirection.Up;
+        }
+
+        private static GamePadDirection CalculateSlideFromDown(GamePadDirection PreviousDirectionNotNone, int left, int right, int up, int down)
+        {
+            if (left > 0 && down > 0)
+                return PreviousDirectionNotNone;
+
+            if (right > 0 && down > 0)
+                return PreviousDirectionNotNone;
+
+            if (left > right)
+                return GamePadDirection.Left;
+
+            if (right > left)
+                return GamePadDirection.Right;
+
+            if (up > 0)
+                return GamePadDirection.Up;
+
+            return GamePadDirection.Down;
+        }
+
+        private static GamePadDirection CalculatePressStart(GamePadDirection PreviousDirectionNotNone, int left, int right, int up, int down)
+        {
+            if (PreviousDirectionNotNone == GamePadDirection.Right)
+                if (left > 0 && left > up && left > down)
+                    return GamePadDirection.Left;
+                else if (up > 0)
                     return GamePadDirection.Up;
-                else if (fingerWentDown)
+                else if (down > 0)
                     return GamePadDirection.Down;
                 else
                     return GamePadDirection.Right;
-            else if (fingerWentLeft)
-                if (fingerWentUp)
+
+            else if (PreviousDirectionNotNone == GamePadDirection.Left)
+                if (right > 0 && right > up && right > down)
+                    return GamePadDirection.Right;
+                else if (up > 0)
                     return GamePadDirection.Up;
-                else if (fingerWentDown)
+                else if (down > 0)
                     return GamePadDirection.Down;
                 else
                     return GamePadDirection.Left;
-            else if (fingerWentUp)
-                return GamePadDirection.Up;
-            else if (fingerWentDown)
-                return GamePadDirection.Down;
+
+            else if (PreviousDirectionNotNone == GamePadDirection.Down)
+                if (up > 0 && up > left && up > right)
+                    return GamePadDirection.Up;
+                else if (left > 0)
+                    return GamePadDirection.Left;
+                else if (right > 0)
+                    return GamePadDirection.Right;
+                else
+                    return GamePadDirection.Down;
+
+            else if (PreviousDirectionNotNone == GamePadDirection.Up)
+                if (down > 0 && down > left && down > right)
+                    return GamePadDirection.Down;
+                else if (left > 0)
+                    return GamePadDirection.Left;
+                else if (right > 0)
+                    return GamePadDirection.Right;
+                else
+                    return GamePadDirection.Up;
+
             else
-                return GamePadDirection.None;
+            {
+                if (up > 0 && up > left && up > right && up > down)
+                    return GamePadDirection.Up;
+                else if (down > 0 && down > left && down > right && down > up)
+                    return GamePadDirection.Down;
+                else if (left > 0 && left > right && left > up && left > down)
+                    return GamePadDirection.Left;
+                else
+                    return GamePadDirection.Right;
+            }
         }
     }
 
@@ -316,19 +295,14 @@ namespace MonogameFacade
             sprite2.Texture = Game.Instance.GetTexture("btn");
             sprite2.Size = new Point(BaseTouchButtons.Size, BaseTouchButtons.Size);
             sprite2.Color = Color.DarkGray;
-            //obj.Renderers.Add(sprite2);
-
+            obj.Renderers.Add(sprite2);
 
             var sprite = GuiSpriteRenderer.GetFromPool();
             sprite.Texture = Game.Instance.GetTexture("shadedDark04");
             sprite.Size = new Point(BaseTouchButtons.Size, BaseTouchButtons.Size);
-            //sprite.Offset = new Point(-1400, -750);
-            //sprite.Offset = new Point(-585, -300);
-            //sprite.Offset = new Point(-350, -150);
             obj.Renderers.Add(sprite);
 
             data.touchArea = new Rectangle(obj.Location, sprite.Size); ;
-            data.previousTouch = data.DpadCenter = data.touchArea.Center.ToVector2();
             data.touchArea = new Rectangle(
                 obj.Location.X - (BaseTouchButtons.extraSize / 2)
                 , obj.Location.Y - (BaseTouchButtons.extraSize / 2)
@@ -350,13 +324,13 @@ namespace MonogameFacade
 
         public static GameObject Create(GamePadData data)
         {
-            var obj = BaseTouchButtons.Create(data, new Point(430, -320));
+            var obj = BaseTouchButtons.Create(data, new Point(440, -320));
 
             var sprite = GuiSpriteRenderer.GetFromPool();
             sprite.Texture = Game.Instance.GetTexture("btn");
             sprite.Size = new Point(BaseTouchButtons.Size, BaseTouchButtons.Size);
             sprite.Color = Color.DarkGray;
-            //Renderers.Add(sprite);
+            obj.Renderers.Add(sprite);
 
             var sprite1 = GuiSpriteRenderer.GetFromPool();
             sprite1.Texture = Game.Instance.GetTexture("shadedDark39");
@@ -383,7 +357,6 @@ namespace MonogameFacade
             obj.Renderers.Add(sprite4);
 
             data.touchArea = new Rectangle(obj.Location, new Point(BaseTouchButtons.Size, BaseTouchButtons.Size));
-            data.previousTouch = data.DpadCenter = data.touchArea.Center.ToVector2();
             data.touchArea = new Rectangle(
                 obj.Location.X - (BaseTouchButtons.extraSize / 2)
                 , obj.Location.Y - (BaseTouchButtons.extraSize / 2)

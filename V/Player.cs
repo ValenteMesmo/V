@@ -62,6 +62,17 @@ namespace V
                 HorizontalMovement.Update(obj, inputDirection.input);
                 JumpsUsingInput.Update(obj, inputAction.input, grounded);
                 Gravity.Apply(obj);
+
+                if (inputDirection.PreviousDirection == GamePadDirection.Down)
+                    sprite.Color = Color.Magenta;
+                else if (inputDirection.PreviousDirection == GamePadDirection.Up)
+                    sprite.Color = Color.Yellow;
+                else if (inputDirection.PreviousDirection == GamePadDirection.Right)
+                    sprite.Color = Color.Blue;
+                else if (inputDirection.PreviousDirection == GamePadDirection.Left)
+                    sprite.Color = Color.Red;
+                else
+                    sprite.Color = Color.Green;
             };
 
             return obj;

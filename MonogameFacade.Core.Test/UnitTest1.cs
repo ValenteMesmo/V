@@ -15,9 +15,9 @@ namespace MonogameFacade.Core.Test
             {
                 var fixture = new Fixture();
                 fixture.Customize(new AutoNSubstituteCustomization());
-                var touchs = new List<Vector2>();
+                var touchs = new List<Point>();
                 var game = fixture.Freeze<IGame>();
-                fixture.Register(() => new GamePadData { input = new InputKeeper()});
+                fixture.Register(() => new GamePadData { input = new InputKeeper() });
                 game.TouchesUi.Returns(touchs);
                 Game.Instance = game;
                 return fixture;
@@ -34,8 +34,10 @@ namespace MonogameFacade.Core.Test
             DirectionalTouchButtons.Create(data);
 
             game.TouchesUi.Add(
-                (data.touchArea.Center + new Point(BaseTouchButtons.minDistance + 1, 0))
-                .ToVector2()
+                new Point(
+                    data.touchArea.Center.X + data.touchArea.Width / 3
+                    , data.touchArea.Center.Y
+                )
             );
 
             Assert.Equal(GamePadDirection.None, data.CurrentDirection);
@@ -51,8 +53,10 @@ namespace MonogameFacade.Core.Test
             DirectionalTouchButtons.Create(data);
 
             game.TouchesUi.Add(
-                (data.touchArea.Center + new Point(BaseTouchButtons.minDistance + 1, 0))
-                .ToVector2()
+                new Point(
+                    data.touchArea.Center.X + data.touchArea.Width / 3
+                    , data.touchArea.Center.Y
+                )
             );
 
             Assert.Equal(GamePadDirection.None, data.CurrentDirection);
@@ -70,8 +74,10 @@ namespace MonogameFacade.Core.Test
             DirectionalTouchButtons.Create(data);
 
             game.TouchesUi.Add(
-                (data.touchArea.Center + new Point(BaseTouchButtons.minDistance + 1, 0))
-                .ToVector2()
+                new Point(
+                    data.touchArea.Center.X + data.touchArea.Width / 3
+                    , data.touchArea.Center.Y
+                )
             );
 
             BaseTouchButtons.Update(data);
@@ -83,6 +89,37 @@ namespace MonogameFacade.Core.Test
             BaseTouchButtons.Update(data);
 
             Assert.Equal(GamePadDirection.None, data.CurrentDirection);
+        }
+
+        [Theory, AutoNSubstituteData]
+        public void TouchDiagonalAfterRightRelease(IGame game, GamePadData data)
+        {
+            DirectionalTouchButtons.Create(data);
+
+            var rightTouch = new Point(
+               data.touchArea.Center.X + (data.touchArea.Size.X / 4)
+               , data.touchArea.Center.Y
+           );
+
+            var diagonalTouch = new Point(
+                data.touchArea.Center.X + (data.touchArea.Size.X / 4)
+                , data.touchArea.Center.Y + (data.touchArea.Size.Y / 3)
+            );
+
+            game.TouchesUi.Add(
+                rightTouch
+            );
+
+            BaseTouchButtons.Update(data);
+            game.TouchesUi.Clear();
+            BaseTouchButtons.Update(data);
+
+            game.TouchesUi.Add(
+               diagonalTouch
+            );
+            BaseTouchButtons.Update(data);
+
+            Assert.Equal(GamePadDirection.Down, data.CurrentDirection);
         }
     }
 }

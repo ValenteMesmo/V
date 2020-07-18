@@ -20,7 +20,7 @@ namespace MonogameFacade
         Camera Camera { get; }
         Camera GuiCamera { get; }
 
-        List<Vector2> TouchesUi { get; }
+        List<Point> TouchesUi { get; }
     }
 
     public abstract class Game : OldGame, IGame
@@ -31,8 +31,8 @@ namespace MonogameFacade
         public static IGame Instance = null;
 
         public Action<long> Vibrate { get; set; }
-        public List<Vector2> Touches { get; set; }
-        public List<Vector2> TouchesUi { get; set; }
+        public List<Point> Touches { get; set; }
+        public List<Point> TouchesUi { get; set; }
         private GameObject currentObject = null;
         private Collider currentCollider = null;
         public GraphicsDeviceManager graphics = null;
@@ -78,8 +78,8 @@ namespace MonogameFacade
             graphics = new GraphicsDeviceManager(this);
 
             Content.RootDirectory = "Content";
-            Touches = new List<Vector2>();
-            TouchesUi = new List<Vector2>();
+            Touches = new List<Point>();
+            TouchesUi = new List<Point>();
 
             IsFixedTimeStep = false;
             graphics.SynchronizeWithVerticalRetrace = false;
@@ -203,14 +203,10 @@ namespace MonogameFacade
 
             var mouse = Mouse.GetState();
             MouseInput.Position =
-                GuiCamera.GetWorldPosition(
-                        mouse.Position.ToVector2())
-                    .ToPoint();
+                GuiCamera.GetWorldPosition(mouse.Position);
 
             MouseInput.WorldPosition =
-                Camera.GetWorldPosition(
-                        mouse.Position.ToVector2())
-                    .ToPoint();
+                Camera.GetWorldPosition(mouse.Position);
 
             if (mouse.LeftButton == ButtonState.Pressed)
             {
@@ -231,12 +227,9 @@ namespace MonogameFacade
             if (mouse.LeftButton == ButtonState.Pressed)
             {
                 TouchesUi.Add(
-                    GuiCamera.GetWorldPosition(
-                        mouse.Position.ToVector2())
+                    GuiCamera.GetWorldPosition(mouse.Position)
                     );
-                Touches.Add(
-                    Camera.GetWorldPosition(
-                        mouse.Position.ToVector2()));
+                Touches.Add(Camera.GetWorldPosition(mouse.Position));
             }
 
             var state = TouchPanel.GetState();

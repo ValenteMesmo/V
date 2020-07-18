@@ -35,13 +35,14 @@ namespace MonogameFacade
             return Transform;
         }
 
-        public Vector2 GetWorldPosition(Vector2 position)
-        {
-            return Vector2.Transform(
+        public Point GetWorldPosition(Point position) =>
+            GetWorldPosition(position.ToVector2());
+
+        public Point GetWorldPosition(Vector2 position) =>
+            Vector2.Transform(
                 position
                 , Matrix.Invert(Transform)
-            );
-        }
+            ).ToPoint();
 
         public Vector2 GetScreenLocation(Vector2 position)
         {
