@@ -21,6 +21,8 @@ namespace MonogameFacade
         Camera GuiCamera { get; }
 
         List<Point> TouchesUi { get; }
+        MouseInput MouseInput { get; }
+
     }
 
     public abstract class Game : OldGame, IGame
@@ -31,15 +33,15 @@ namespace MonogameFacade
         public static IGame Instance = null;
 
         public Action<long> Vibrate { get; set; }
-        public List<Point> Touches { get; set; }
-        public List<Point> TouchesUi { get; set; }
+        public List<Point> Touches { get; }
+        public List<Point> TouchesUi { get; }
         private GameObject currentObject = null;
         private Collider currentCollider = null;
         public GraphicsDeviceManager graphics = null;
         private SpriteBatch spriteBatch = null;
         private SpriteBatch spriteBatchGui = null;
 
-        public MouseInput MouseInput = null;
+        public MouseInput MouseInput { get; }
 
         public Camera Camera { get;  }
         public Camera GuiCamera { get; }
@@ -56,6 +58,8 @@ namespace MonogameFacade
         private DateTime currentUpdate;
         private DateTime actualCurrentUpdate;
         private double delta;
+
+        public static Texture2D DefaultTexture;
 
         public Texture2D GetTexture(string name)
         {
@@ -95,6 +99,7 @@ namespace MonogameFacade
 
             Font = Content.Load<SpriteFont>("font");
             Textures = LoadTextures(Content);
+            DefaultTexture = GetTexture("btn");
             pixel = new Texture2D(GraphicsDevice, 1, 1);
             pixel.SetData(new[] { Color.White });
         }
